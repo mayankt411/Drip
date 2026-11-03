@@ -14,7 +14,22 @@
 2. **Locked Test Period Status**:
    - Because the 2022-10-19 to 2023-12-31 test period was unblinded and evaluated during the flawed runs, it is permanently contaminated.
    - Any re-evaluation on the 2021–2023 dataset must be classified as **POST-HOC EXPLORATORY**.
-   - Any future confirmatory test requires an unopened temporal window (e.g., 2024–2026).
-3. **Mandatory Protocol for Pipeline Rebuilding**:
-   - Native 10m Ground Sample Distance rasters (`.jp2` or Cloud-Optimized GeoTIFFs for bands B02, B03, B04, B08) must be downloaded and cropped using exact UTM Zone 14N geo-coordinates.
-   - Extraction must be run and verified on the 10 manual-check reference scenes first. If computer vision residuals against human inspection fail, execution must halt immediately.
+   - Any future confirmatory test requires an unopened temporal window (e.g., 2024).
+
+---
+
+## Incident 002: Stop-Gate Residual Failure on 2023 Verification Scenes (Date: 2026-11-03)
+
+### 1. Event Description
+Following the recovery of native 10-meter Level-2A bands (`B04`, `B08`), an automated Stop Gate was executed on the 10 reference inspection scenes from December 2023 (`data/manual_checks.csv`).
+- **Pre-registered Gate Threshold:** Every tank residual must satisfy $|\hat{L}_i - L_{\text{ref}, i}| \le 3.0\text{ m}$.
+- **Result:**
+  - Automated radial thresholding collapsed to the analytical upper boundary ($L_{\text{max}} \approx 28\text{ m}$) across all 10 tanks (Mean Absolute Residual: $13.49\text{ m}$, 0/10 passing).
+  - Sub-pixel radial gradient edge detection yielded residuals ranging from $-11.11\text{ m}$ to $+16.06\text{ m}$ (Mean Absolute Residual: $8.69\text{ m}$, only 1/10 passing).
+- **Decision:** **STOP GATE FAILED.** Pipeline execution on the 2023 period was halted immediately to preserve protocol integrity.
+
+### 2. Corrective Protocol Transition
+In accordance with open-science rules:
+1. The 2021–2023 dataset is permanently closed to confirmatory claims.
+2. A new, strictly confirmatory study protocol is pre-registered in `docs/prereg_v2.md` on an untouched post-2023 temporal window (2024-01-01 to 2024-06-30).
+3. Candidate methods (M1, M2, M3) and the Q2 Contrast-to-Noise Ratio (CNR) diagnostic are locked before any 2024 data is downloaded or inspected.

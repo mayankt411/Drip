@@ -1,0 +1,43 @@
+# Pre-Registration v2 Configuration: Locked Untouched Test Window
+version: "2.0.0"
+study_title: "Confirmatory Evaluation of Free 10m Sentinel-2 Imagery for Floating-Roof Oil Storage Shadow Extraction at Cushing, OK"
+
+locked_test_period:
+  start_date: "2024-01-01"
+  end_date: "2024-06-30"
+  description: "Temporal window strictly following all previously opened/examined data (post-2023). Zero imagery or EIA observations examined prior to protocol freeze."
+
+eligible_tanks:
+  count: 10
+  registry_file: "data/tanks/tank_registry.csv"
+  eligibility_rule: "Commercial external floating roof crude storage tank with ground-truth diameter and shell height verified via high-resolution aerial gazetteer."
+
+quality_control_and_gates:
+  q1_tolerance_meters: 3.0
+  q1_min_pass_rate: 0.80
+  q1_max_median_absolute_residual: 2.0
+  q2_cnr_threshold: 2.0
+  cloud_footprint_threshold_percent: 20.0
+  physical_height_clearance_meters: 1.5
+
+methods:
+  m1:
+    name: "Single-Band Threshold Crescent Extraction"
+    band: "B04"
+    search_vector: "solar_azimuth"
+  m2:
+    name: "Multi-Band Spectral Index Classifier"
+    bands: ["B02", "B03", "B04", "B08", "B8A", "B11", "B12"]
+    index: "shadow_index_s2"
+  m3:
+    name: "Sub-Pixel Gradient Profile Method"
+    band: "B04"
+    derivation: "first_gradient_peak"
+
+q3_spec:
+  conditional_on_q1: true
+  bootstrap_block_size: 4
+  bootstrap_sensitivity_blocks: [2, 8]
+  bootstrap_iterations: 1000
+  lags: [0, 1]
+  consecutive_pairs_only: true
