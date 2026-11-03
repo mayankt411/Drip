@@ -1,3 +1,0 @@
-stratum_type,stratum_level,n_weeks,mean_mape_percent,mean_mae_mbbl
-cloud_cover,clear_below_median,26,2.57,755.77
-cloud_cover,cloudy_above_median,18,2.41,799.83
