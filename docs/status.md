@@ -1,26 +1,24 @@
-# Current Project Status & Phase Gate Log
+# Status Log & Pre-Registration Audit (Protocol v2.0)
 
-## 1. Provenance and Integrity Audit (NO MOCK DATA)
-- **Official EIA Stocks**: 157 weekly records retrieved directly from EIA API v2 (`W_EPC0_SAX_YCUOK_MBBL`). Authenticated and verified.
-- **Sentinel-2 Catalog**: 877 Level-2A products cataloged directly from Copernicus Data Space Ecosystem (CDSE) STAC API over the Cushing AOI.
-- **Exclusions**: 407 cloudy products (>40% cloud cover) logged in `data/exclusions.csv`.
-- **Integrity Compliance**:
-  - Any shortcut scripts containing synthetic noise or pseudo-measurements (`process_pipeline.py`) have been **purged**.
-  - All synthetic machine learning scripts (`yololite_tank_detector_demo.m`) have been **purged**.
-  - No synthetic data is permitted to feed any result or metric.
+## 1. Protocol Registration & Commit Lock
+- **Pre-Registration v2 Document:** `docs/prereg_v2.md`
+- **Configuration Spec:** `configs/prereg_v2.yaml`
+- **Git Commit Hash (LOCKED):** `ede4a3fd56960d1538d5b01aec2241ecc5261510`
+- **Lock Timestamp:** 2026-11-03T19:40:00+04:00
+- **Study Status:** STRICTLY CONFIRMATORY on pristine, unopened 2024 window (`2024-01-01` to `2024-06-30`).
 
-## 2. Research Phase Gate Status
-- **Phase 0 (Literature & Environment)**: COMPLETED.
-- **Phase 1 (Acquisition)**:
-  - EIA weekly series fully downloaded (`data/raw/eia_cushing_weekly_2021_2023.json`).
-  - S2 L2A STAC catalog fully downloaded (`data/raw/s2_cushing_stac_2021_2023.json`).
-  - Full-band multispectral rasters (`.jp2` B02, B03, B04, B08, SCL) download pipeline established in `src/acquire/download_bands.py`.
-- **Phase 2 (Cloud & Quality Masking)**: COMPLETED (47 weeks blocked by clouds, 110 weeks available).
-- **Phase 3 (Tank Registry Validation)**: Ground truth registry established with 10 Cushing commercial tanks (`data/tanks/tank_registry.csv`).
-- **Phase 4 (Shadow Measurement & Resolution Check)**:
-  - Resolution check conducted at 10m Sentinel-2 GSD (`src/measure/run_phase4_resolution_check.py`).
-  - Physical shadow lengths $< 5\text{ m}$ (summer midday $> 55^\circ$ elevation) span $< 0.5$ pixels, creating severe discretization limits. Winter/autumn ($< 45^\circ$) yields $> 0.9$ to $1.6$ pixels.
-- **Phase 5 (Geometry & Manual Verification)**:
-  - 10 real manual geometry checks logged in `data/manual_checks.csv` across real Sentinel-2 acquisitions.
-- **Phase 6–7 (Locked Evaluation)**:
-  - PENDING download of all target multispectral band rasters. Results directory purged until pixel-level raster extraction on full bands is complete.
+---
+
+## 2. Research Questions Status
+
+| Question | Description | Gate / Threshold | Status | Outcome |
+| :--- | :--- | :--- | :--- | :--- |
+| **Q1 (Measurement Validity)** | Do automated methods (M1, M2, M3) reproduce human reference shadow within $\pm 3.0\text{ m}$? | $\ge 80\%$ pass rate & Median Abs Residual $\le 2.0\text{ m}$ | IN PROGRESS | PENDING |
+| **Q2 (Contrast Diagnostic)** | Is there measurable shadow contrast ($10\text{ m}$ GSD) relative to sensor noise? | Contrast-to-Noise Ratio $\text{CNR} \ge 2.0$ | IN PROGRESS | PENDING |
+| **Q3 (EIA Forecasting)** | Do satellite volume changes predict EIA Cushing stock changes at lag 0 and 1? | Block-bootstrap CI excluding 0 | CONDITIONAL | LOCKED (Evaluated ONLY if Q1 PASS) |
+
+---
+
+## 3. Historical Invalidation Log Summary
+- **Incident 001:** Thumbnail downsampling error in original exploratory runs (2021–2023) voided. All earlier metrics permanently retracted.
+- **Incident 002:** Stop Gate residual verification on native 10m December 2023 rasters failed (10% pass rate). 2021–2023 temporal window permanently designated as historical exploratory context. Confirmatory study established on untouched 2024 data.
