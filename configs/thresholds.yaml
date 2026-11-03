@@ -1,0 +1,18 @@
+# Locked parameters calibrated on development period only
+# Commit hash: PENDING_INITIAL_COMMIT
+calibration_notes: "Fixed on development period (2021-01-01 to 2022-10-18). Never modified on test period."
+
+cloud_mask:
+  max_product_cloud_cover_percent: 40.0
+  max_tank_cloud_fraction: 0.10
+  scl_cloud_classes: [3, 8, 9, 10, 11] # 3: Cloud shadow, 8: Cloud medium, 9: Cloud high, 10: Cirrus, 11: Snow/Ice
+
+shadow_extraction:
+  shadow_band_ratio_threshold: 0.85
+  min_shadow_pixel_count: 3
+  subpixel_resolution_factor: 1 # At 10m native pixel grid
+
+geometry:
+  h_empty_offset_meters: 1.5 # Pontoon roof leg resting height above tank floor
+  barrel_conversion_factor: 6.28981077 # Standard API/ASTM: 1 m^3 = 6.28981077 barrels
+  default_tank_wall_height_meters: 18.0 # Typical large floating-roof storage tank height (48-60 ft)

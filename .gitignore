@@ -1,0 +1,21 @@
+# Environment & Secrets
+.env
+.env.local
+*.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Raw large imagery rasters (>100MB)
+data/raw/rasters/
+*.jp2
+*.SAFE/
+*.zip
+
+# System artifacts
+.DS_Store
+Thumbs.db

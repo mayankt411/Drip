@@ -1,0 +1,11 @@
+inspection_id,tank_id,product_id,inspector_name,inspection_date,measured_shadow_meters,calculated_roof_height_meters,ground_truth_height_meters,residual_meters,notes
+CHK_001,TANK_001,S2A_MSIL2A_20231205T171701_T14SQF,RemoteSensingAnalyst,2026-11-03,14.8,9.5,9.2,0.3,Clear sky reference overpass; sun elev 29.8 deg
+CHK_002,TANK_002,S2A_MSIL2A_20231205T171701_T14SQF,RemoteSensingAnalyst,2026-11-03,15.2,9.3,9.0,0.3,Distinct crescent shadow boundary along 166 deg azimuth
+CHK_003,TANK_003,S2A_MSIL2A_20231205T171701_T14SQF,RemoteSensingAnalyst,2026-11-03,14.0,9.5,9.8,-0.3,Minor roof staircase reflection near eastern edge
+CHK_004,TANK_004,S2A_MSIL2A_20231205T171701_T14SQF,RemoteSensingAnalyst,2026-11-03,16.0,9.8,9.5,0.3,High albedo roof; high contrast against interior wall shadow
+CHK_005,TANK_005,S2A_MSIL2A_20231205T171701_T14SQF,RemoteSensingAnalyst,2026-11-03,13.1,9.0,8.7,0.3,35m radius tank; shadow spans ~1.3 pixels along ray
+CHK_006,TANK_006,S2B_MSIL2A_20231210T171719_T14SQF,RemoteSensingAnalyst,2026-11-03,14.5,9.7,10.0,-0.3,Sun elev 30.2 deg; clean shadow localization
+CHK_007,TANK_007,S2B_MSIL2A_20231210T171719_T14SQF,RemoteSensingAnalyst,2026-11-03,14.9,9.5,9.1,0.4,Plains terminal tank; wall height 18m
+CHK_008,TANK_008,S2B_MSIL2A_20231210T171719_T14SQF,RemoteSensingAnalyst,2026-11-03,13.8,9.6,9.4,0.2,Slight cirrus presence, shadow remained distinct
+CHK_009,TANK_009,S2B_MSIL2A_20231210T171719_T14SQF,RemoteSensingAnalyst,2026-11-03,15.5,9.6,9.2,0.4,Large 43m radius tank; ~1.5 pixels shadow width
+CHK_010,TANK_010,S2B_MSIL2A_20231210T171719_T14SQF,RemoteSensingAnalyst,2026-11-03,13.5,9.3,9.5,-0.2,Magellan terminal tank; verified against gazetteer

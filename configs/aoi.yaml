@@ -1,0 +1,14 @@
+# Area of Interest (AOI): Cushing, Oklahoma Crude Oil Storage Hub
+hub_name: "Cushing, Oklahoma"
+description: "Delivery hub for NYMEX WTI crude oil futures"
+center_coordinates:
+  latitude: 35.9800
+  longitude: -96.7700
+# Bounding box roughly 14 km x 14 km covering main Cushing tank farms
+bounding_box:
+  west: -96.8500
+  south: 35.9100
+  east: -96.6900
+  north: 36.0500
+crs: "EPSG:4326"
+utm_zone: "EPSG:32614" # UTM Zone 14N

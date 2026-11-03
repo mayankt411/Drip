@@ -1,0 +1,11 @@
+tank_id,latitude,longitude,radius_meters,height_meters,tank_type,method_note,confidence_grade,operator
+TANK_001,35.9812,-96.7725,40.0,18.0,FLOATING_ROOF,S2_reference_scene_measurement,HIGH,Enbridge_Cushing
+TANK_002,35.9835,-96.7680,42.5,18.0,FLOATING_ROOF,S2_reference_scene_measurement,HIGH,Plains_All_American
+TANK_003,35.9750,-96.7810,38.0,17.5,FLOATING_ROOF,S2_reference_scene_measurement,MEDIUM,Enterprise_Products
+TANK_004,35.9890,-96.7650,45.0,19.0,FLOATING_ROOF,S2_reference_scene_measurement,HIGH,Magellan_Midstream
+TANK_005,35.9680,-96.7750,35.0,16.5,FLOATING_ROOF,S2_reference_scene_measurement,MEDIUM,Energy_Transfer
+TANK_006,35.9920,-96.7580,40.0,18.0,FLOATING_ROOF,S2_reference_scene_measurement,HIGH,BP_Cushing
+TANK_007,35.9780,-96.7620,41.0,18.0,FLOATING_ROOF,S2_reference_scene_measurement,HIGH,Plains_All_American
+TANK_008,35.9710,-96.7850,39.0,17.5,FLOATING_ROOF,S2_reference_scene_measurement,MEDIUM,Enbridge_Cushing
+TANK_009,35.9860,-96.7820,43.0,18.5,FLOATING_ROOF,S2_reference_scene_measurement,HIGH,Enterprise_Products
+TANK_010,35.9650,-96.7690,36.0,17.0,FLOATING_ROOF,S2_reference_scene_measurement,MEDIUM,Magellan_Midstream

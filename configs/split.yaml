@@ -1,0 +1,15 @@
+# Train / Test Temporal Split Configuration
+# Split rule: Chronological / by date (no random splitting)
+# Earliest 60% development / calibration period; latest 40% locked test period
+study_window:
+  start_date: "2021-01-01"
+  end_date: "2023-12-31"
+development_period:
+  start_date: "2021-01-01"
+  end_date: "2022-10-18" # 60% of 156 weeks = ~94 weeks
+test_period:
+  start_date: "2022-10-19"
+  end_date: "2023-12-31" # 40% of 156 weeks = ~62 weeks
+split_type: "chronological"
+locked_status: true
+test_period_opened: false
