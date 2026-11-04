@@ -1,0 +1,11 @@
+tank_id,reference_shadow_m,m1_shadow_m,m1_residual_m,m1_pass,m2_shadow_m,m2_residual_m,m2_pass,m3_shadow_m,m3_residual_m,m3_pass
+TANK_001,14.00,20.41,6.41,False,20.41,6.41,False,21.02,7.02,False
+TANK_002,14.30,6.07,-8.23,False,24.29,9.99,False,5.04,-9.26,False
+TANK_003,13.25,2.33,-10.92,False,23.99,10.74,False,3.22,-10.03,False
+TANK_004,15.00,15.61,0.61,True,21.12,6.12,False,26.24,11.24,False
+TANK_005,12.60,10.00,-2.60,True,16.43,3.83,False,16.61,4.01,False
+TANK_006,14.10,6.53,-7.57,False,24.74,10.64,False,5.42,-8.68,False
+TANK_007,13.90,18.41,4.51,False,18.41,4.51,False,18.07,4.17,False
+TANK_008,13.10,11.94,-1.16,True,23.08,9.98,False,11.90,-1.20,True
+TANK_009,14.80,2.63,-12.17,False,24.57,9.77,False,16.03,1.23,True
+TANK_010,12.90,5.88,-7.02,False,14.69,1.79,True,6.10,-6.80,False

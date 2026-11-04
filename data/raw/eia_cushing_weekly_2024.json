@@ -1,0 +1,371 @@
+{
+  "response": {
+    "total": "26",
+    "dateFormat": "YYYY-MM-DD",
+    "frequency": "weekly",
+    "data": [
+      {
+        "period": "2024-01-05",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "34173",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-01-12",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "32074",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-01-19",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "30066",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-01-26",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "28094",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-02-02",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "28061",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-02-09",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "28771",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-02-16",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "29512",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-02-23",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "30970",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-03-01",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "31671",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-03-08",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "31451",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-03-15",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "31433",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-03-22",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "33540",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-03-29",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "33163",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-04-05",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "32993",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-04-12",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "33026",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-04-19",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "32367",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-04-26",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "33456",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-05-03",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "35336",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-05-10",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "34995",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-05-17",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "36320",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-05-24",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "34554",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-05-31",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "35408",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-06-07",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "33815",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-06-14",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "34122",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-06-21",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "33896",
+        "units": "MBBL"
+      },
+      {
+        "period": "2024-06-28",
+        "duoarea": "YCUOK",
+        "area-name": "NA",
+        "product": "EPC0",
+        "product-name": "Crude Oil",
+        "process": "SAX",
+        "process-name": "Ending Stocks Excluding SPR",
+        "series": "W_EPC0_SAX_YCUOK_MBBL",
+        "series-description": "Cushing, OK Ending Stocks excluding SPR of Crude Oil (Thousand Barrels)",
+        "value": "34241",
+        "units": "MBBL"
+      }
+    ]
+  },
+  "request": {
+    "command": "/v2/petroleum/stoc/wstk/data/",
+    "params": {
+      "frequency": "weekly",
+      "data": [
+        "value"
+      ],
+      "facets": {
+        "series": [
+          "W_EPC0_SAX_YCUOK_MBBL"
+        ]
+      },
+      "start": "2024-01-01",
+      "end": "2024-06-30",
+      "sort": [
+        {
+          "column": "period",
+          "direction": "asc"
+        }
+      ]
+    }
+  },
+  "apiVersion": "2.1.14",
+  "ExcelAddInVersion": "2.1.0"
+}

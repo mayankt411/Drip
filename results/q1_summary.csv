@@ -1,0 +1,4 @@
+method_id,method_name,eligible_tanks,pass_count,pass_rate_pct,median_abs_residual_m,mean_abs_residual_m,gate_threshold_met,verdict
+M1,M1_SingleBand_Threshold,10,3,30.0,6.71,6.12,False,FAIL
+M2,M2_MultiBand_SpectralIndex,10,1,10.0,8.09,7.38,False,FAIL
+M3,M3_SubPixel_Gradient,10,2,20.0,6.91,6.36,False,FAIL

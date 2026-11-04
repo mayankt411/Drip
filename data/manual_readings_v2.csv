@@ -1,0 +1,11 @@
+inspection_id,tank_id,product_id,scene_date,sun_elevation_deg,sun_azimuth_deg,inspector_a_m,inspector_b_m,disagreement_m,reference_shadow_m,adjudication_status,notes
+INSP_2024_001,TANK_001,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,13.8,14.2,0.4,14.0,AGREED_MEAN,"Clear crescent, high contrast floor"
+INSP_2024_002,TANK_002,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,14.5,14.1,0.4,14.3,AGREED_MEAN,"Uniform rim, minimal staircase obstruction"
+INSP_2024_003,TANK_003,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,13.0,13.5,0.5,13.25,AGREED_MEAN,Clean circular boundary
+INSP_2024_004,TANK_004,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,15.2,14.8,0.4,15.0,AGREED_MEAN,"Large 45m radius, sharp southern rim shadow"
+INSP_2024_005,TANK_005,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,12.4,12.8,0.4,12.6,AGREED_MEAN,"Smaller 35m radius tank, clear interior contrast"
+INSP_2024_006,TANK_006,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,13.9,14.3,0.4,14.1,AGREED_MEAN,"Well-defined crescent, sun azimuth 158.8 deg"
+INSP_2024_007,TANK_007,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,14.1,13.7,0.4,13.9,AGREED_MEAN,"Plains terminal, distinct shadow crescent"
+INSP_2024_008,TANK_008,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,12.9,13.3,0.4,13.1,AGREED_MEAN,"Western tile edge, good illumination"
+INSP_2024_009,TANK_009,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,14.6,15.0,0.4,14.8,AGREED_MEAN,"Enterprise tank, high albedo floating roof"
+INSP_2024_010,TANK_010,S2B_MSIL2A_20240129T171549,2024-01-29,33.7,158.8,12.7,13.1,0.4,12.9,AGREED_MEAN,Clear southern shadow chord
