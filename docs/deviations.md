@@ -33,3 +33,30 @@ In accordance with open-science rules:
 1. The 2021–2023 dataset is permanently closed to confirmatory claims.
 2. A new, strictly confirmatory study protocol is pre-registered in `docs/prereg_v2.md` on an untouched post-2023 temporal window (2024-01-01 to 2024-06-30).
 3. Candidate methods (M1, M2, M3) and the Q2 Contrast-to-Noise Ratio (CNR) diagnostic are locked before any 2024 data is downloaded or inspected.
+
+---
+
+## Reporting Notes Recorded at Write-Up (Date: 2026-11-04)
+
+These were found while preparing `paper/paper.md` and do not change any registered verdict.
+
+### Deviation 003: Holm-Bonferroni operationalization
+`docs/prereg_v2.md` Section 5 requires Holm-Bonferroni correction across the three methods but does not name a test statistic. For the write-up, a one-sided exact binomial test of H0: pass probability <= 0.80 was used per method, then Holm-adjusted (`src/report/make_confirmatory_report.py`). This choice was made after results were known. All three adjusted p values are > .999. Verdicts rest on the registered pass-rate and median-residual thresholds only.
+
+### Note 004: Cloud screening basis
+The 2024 exclusion log records scene-level `eo:cloud_cover` from the STAC catalogue (threshold 20%), not the tank-footprint Scene Classification Layer rule in `docs/prereg_v2.md` Section 6. Logged exclusions: 44 of 72 T14SQE and T14SPE products (61.1%). Across all four tiles in the catalogue the figure is 87 of 144 (60.4%). No footprint-level SCL screening record is in the repository.
+
+### Note 005: Single acquisition date
+All 10 tanks in `data/manual_readings_v2.csv` come from one acquisition (S2B_MSIL2A_20240129T171549, 2024-01-29). 14 dates in the window had T14SQE scene cloud cover at or below 20%, but only one was evaluated.
+
+### Note 006: Method 2 definition differs between registered files
+`docs/prereg_v2.md` defines M2 with bands B02, B03, B04, B08 and B11 and an explicit index formula. `configs/prereg_v2.yaml` lists B02, B03, B04, B08, B8A, B11 and B12 and names the index `shadow_index_s2`. Only B02, B03, B04, B08, B11 and TCI were downloaded for 2024-01-29. The paper describes M2 as in `docs/prereg_v2.md`; which definition the run used cannot be confirmed from this repository (see Note 007).
+
+### Note 007: Evaluation code and rasters are not in the repository
+No script in the repository at commit `8087717` writes the three 2024 result CSVs, and the rasters are gitignored. The results are committed but cannot be regenerated from this checkout. The M1-M3 and CNR code used for the run should be committed before the paper claims computational reproducibility.
+
+### Note 008: Line endings in manifest checksums
+The manifest checksums for `data/raw/eia_cushing_weekly_2024.json` and `data/raw/s2_cushing_stac_2024.json` were computed on CRLF copies. The committed files use LF, so those two checksums only match after CRLF conversion. LF checksums were appended as separate rows; `src/acquire/verify_manifest.py` accepts either.
+
+### Note 009: No retrieval timestamps for 2024 files
+The 2024 manifest rows (STAC catalogue, EIA series, rasters) do not record retrieval times. That they were obtained after the protocol lock (`ede4a3f`, 2026-11-03) rests on the commit history: they first appear in `8087717` (2026-11-04).

@@ -38,3 +38,9 @@ data/raw/rasters/20240129_T14SQE_B04_10m.jp2,43fdbfcba3e7b8e44c7d08c82c5e4dc7026
 data/raw/rasters/20240129_T14SQE_B08_10m.jp2,e142a1df7a06f6b621fc2b6ba7b6ee21ce6f85c59bdd9a7d8347970036c10d21,126500416,Sentinel-2 L2A 2024-01-29 native raster via CDSE OData
 data/raw/rasters/20240129_T14SQE_B11_20m.jp2,9a8c991f3771e3a6944a9a5d01523beb707ebd033e90d9342d665963d8b467d5,33361629,Sentinel-2 L2A 2024-01-29 native raster via CDSE OData
 data/raw/rasters/20240129_T14SQE_TCI_10m.jp2,069be0747150e9456d0605dca28de9dd59a4df3db671d5b9f1cf1490c95e3d24,135237860,Sentinel-2 L2A 2024-01-29 native raster via CDSE OData
+data/raw/eia_cushing_weekly_2024.json,NA,line_endings=LF (git blob); rows above hash the CRLF working copy,EIA v2 weekly Cushing stocks series W_EPC0_SAX_YCUOK_MBBL 2024,NA,cfd1d0e65cfd4fd9073856b88c5f481507cf817d87d28b75438a64687d42a725,LF_CHECKSUM_ADDED_2026-11-04
+data/raw/s2_cushing_stac_2024.json,NA,line_endings=LF (git blob); rows above hash the CRLF working copy,CDSE STAC Sentinel-2 L2A catalogue for Cushing AOI 2024-01-01 to 2024-06-30,NA,78a045c3ad501891023c99724a4ec675441968cd787282f50559e299ac2db4e3,LF_CHECKSUM_ADDED_2026-11-04
+data/manual_readings_v2.csv,NA,line_endings=LF,"Blinded human reference shadow readings, 2024-01-29 scene, 10 tanks",NA,d0749c22ea7e283c3eac1ef6344438d3baa957fb1bbc56b9d48060e9d39694bf,CHECKSUM_ADDED_2026-11-04
+results/q1_summary.csv,NA,line_endings=LF,"Q1 summary, locked 2024 test window",NA,a09412e33e510e50faca669e5ac36526b61a75ac7c1fc9483ef4be0ffe3c0929,CHECKSUM_ADDED_2026-11-04
+results/q1_residuals_all_methods.csv,NA,line_endings=LF,"Q1 per-tank residuals, M1-M3",NA,815924c2583cf7d72d44fb3a574b8fca3ff3e24593c1119f8d8cad2957e78b1b,CHECKSUM_ADDED_2026-11-04
+results/q2_contrast_diagnostics.csv,NA,line_endings=LF,"Q2 contrast-to-noise diagnostics, 10 tanks",NA,eb0745fd1f72204a04b6b7e2cce71657654252f8aec2f92df8b289e85f60b3b3,CHECKSUM_ADDED_2026-11-04

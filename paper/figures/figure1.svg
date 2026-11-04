@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 500" width="780" height="500" font-family="Arial, Helvetica, sans-serif" font-size="12" role="img">
+<title>Reference and automated shadow lengths in units of the 10 m pixel</title>
+<desc>For each of ten tanks, the blinded reference crescent length with a 3 m tolerance band, the three automated estimates, and the geometric ceiling.</desc>
+<rect width="780" height="500" fill="#ffffff"/>
+<rect x="110.0" y="78" width="213.3" height="360" fill="#ffffff"/>
+<rect x="323.3" y="78" width="213.3" height="360" fill="#f0f0ec"/>
+<rect x="536.7" y="78" width="213.3" height="360" fill="#ffffff"/>
+<text x="100" y="100.0" text-anchor="end" fill="#222222">TANK_001</text>
+<rect x="344.7" y="81.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="637.8" x2="637.8" y1="81.0" y2="111.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="408.7" x2="408.7" y1="80.0" y2="112.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="545.4" cy="87.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="541.4" y="92.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="558.4,100.0 553.4,109.0 563.4,109.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="114" y2="114" stroke="#e4e4e0"/>
+<text x="100" y="136.0" text-anchor="end" fill="#222222">TANK_002</text>
+<rect x="351.1" y="117.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="637.8" x2="637.8" y1="117.0" y2="147.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="415.1" x2="415.1" y1="116.0" y2="148.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="239.5" cy="123.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="624.2" y="128.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="217.5,136.0 212.5,145.0 222.5,145.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="150" y2="150" stroke="#e4e4e0"/>
+<text x="100" y="172.0" text-anchor="end" fill="#222222">TANK_003</text>
+<rect x="328.7" y="153.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="621.8" x2="621.8" y1="153.0" y2="183.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="392.7" x2="392.7" y1="152.0" y2="184.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="159.7" cy="159.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="617.8" y="164.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="178.7,172.0 173.7,181.0 183.7,181.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="186" y2="186" stroke="#e4e4e0"/>
+<text x="100" y="208.0" text-anchor="end" fill="#222222">TANK_004</text>
+<rect x="366.0" y="189.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="669.8" x2="669.8" y1="189.0" y2="219.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="430.0" x2="430.0" y1="188.0" y2="220.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="443.0" cy="195.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="556.6" y="200.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="669.8,208.0 664.8,217.0 674.8,217.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="222" y2="222" stroke="#e4e4e0"/>
+<text x="100" y="244.0" text-anchor="end" fill="#222222">TANK_005</text>
+<rect x="314.8" y="225.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="589.8" x2="589.8" y1="225.0" y2="255.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="378.8" x2="378.8" y1="224.0" y2="256.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="323.3" cy="231.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="456.5" y="236.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="464.3,244.0 459.3,253.0 469.3,253.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="258" y2="258" stroke="#e4e4e0"/>
+<text x="100" y="280.0" text-anchor="end" fill="#222222">TANK_006</text>
+<rect x="346.8" y="261.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="637.8" x2="637.8" y1="261.0" y2="291.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="410.8" x2="410.8" y1="260.0" y2="292.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="249.3" cy="267.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="633.8" y="272.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="225.6,280.0 220.6,289.0 230.6,289.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="294" y2="294" stroke="#e4e4e0"/>
+<text x="100" y="316.0" text-anchor="end" fill="#222222">TANK_007</text>
+<rect x="342.5" y="297.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="637.8" x2="637.8" y1="297.0" y2="327.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="406.5" x2="406.5" y1="296.0" y2="328.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="502.7" cy="303.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="498.7" y="308.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="495.5,316.0 490.5,325.0 500.5,325.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="330" y2="330" stroke="#e4e4e0"/>
+<text x="100" y="352.0" text-anchor="end" fill="#222222">TANK_008</text>
+<rect x="325.5" y="333.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="621.8" x2="621.8" y1="333.0" y2="363.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="389.5" x2="389.5" y1="332.0" y2="364.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="364.7" cy="339.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="598.4" y="344.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="363.9,352.0 358.9,361.0 368.9,361.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="366" y2="366" stroke="#e4e4e0"/>
+<text x="100" y="388.0" text-anchor="end" fill="#222222">TANK_009</text>
+<rect x="361.7" y="369.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="653.8" x2="653.8" y1="369.0" y2="399.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="425.7" x2="425.7" y1="368.0" y2="400.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="166.1" cy="375.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="630.2" y="380.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="452.0,388.0 447.0,397.0 457.0,397.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="402" y2="402" stroke="#e4e4e0"/>
+<text x="100" y="424.0" text-anchor="end" fill="#222222">TANK_010</text>
+<rect x="321.2" y="405.0" width="128.0" height="30" fill="#c4cad0" opacity="0.6"/>
+<line x1="605.8" x2="605.8" y1="405.0" y2="435.0" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<line x1="385.2" x2="385.2" y1="404.0" y2="436.0" stroke="#111" stroke-width="2.5"/>
+<circle cx="235.4" cy="411.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<rect x="419.4" y="416.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<polygon points="240.1,424.0 235.1,433.0 245.1,433.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<line x1="110" x2="750" y1="438" y2="438" stroke="#555555"/>
+<line x1="110.0" x2="110.0" y1="438" y2="443" stroke="#555555"/>
+<text x="110.0" y="457" text-anchor="middle" fill="#222222">0</text>
+<line x1="216.7" x2="216.7" y1="438" y2="443" stroke="#555555"/>
+<text x="216.7" y="457" text-anchor="middle" fill="#222222">5</text>
+<line x1="323.3" x2="323.3" y1="438" y2="443" stroke="#555555"/>
+<text x="323.3" y="457" text-anchor="middle" fill="#222222">10</text>
+<line x1="430.0" x2="430.0" y1="438" y2="443" stroke="#555555"/>
+<text x="430.0" y="457" text-anchor="middle" fill="#222222">15</text>
+<line x1="536.7" x2="536.7" y1="438" y2="443" stroke="#555555"/>
+<text x="536.7" y="457" text-anchor="middle" fill="#222222">20</text>
+<line x1="643.3" x2="643.3" y1="438" y2="443" stroke="#555555"/>
+<text x="643.3" y="457" text-anchor="middle" fill="#222222">25</text>
+<line x1="750.0" x2="750.0" y1="438" y2="443" stroke="#555555"/>
+<text x="750.0" y="457" text-anchor="middle" fill="#222222">30</text>
+<text x="430" y="480" text-anchor="middle" fill="#222222">Shadow crescent length along the solar azimuth (m); shading alternates every 10 m, the pixel width</text>
+<line x1="20" x2="20" y1="22" y2="40" stroke="#111" stroke-width="2.5"/>
+<text x="28" y="35" fill="#222222">Reference</text>
+<rect x="108" y="23" width="26" height="16" fill="#c4cad0" opacity="0.6"/>
+<text x="140" y="35" fill="#222222">±3 m tolerance</text>
+<circle cx="270.0" cy="31.0" r="4.5" fill="#0072B2" stroke="#fff" stroke-width="1.5"/>
+<text x="280" y="35" fill="#222222">M1</text>
+<rect x="336.0" y="27.0" width="8" height="8" fill="#D55E00" stroke="#fff" stroke-width="1.5"/>
+<text x="350" y="35" fill="#222222">M2</text>
+<polygon points="410.0,26.0 405.0,35.0 415.0,35.0" fill="#009E73" stroke="#fff" stroke-width="1.5"/>
+<text x="420" y="35" fill="#222222">M3</text>
+<line x1="500" x2="500" y1="22" y2="40" stroke="#777" stroke-width="1.5" stroke-dasharray="3 2"/>
+<text x="508" y="35" fill="#222222">Geometric ceiling</text>
+</svg>
