@@ -79,15 +79,16 @@ def build_dataset(c):
         n_img = 0
         for path in sorted(CUBES.glob("*.npz")):
             day = f"{path.stem[:4]}-{path.stem[4:6]}-{path.stem[6:]}"
-            if not in_range(day, d0, d1) or (part == "val" and day < d0):
+            if not in_range(day, d0, d1) or (part == "train" and day >= d1):
                 continue
             z = np.load(path)
             img = rgb_u8(z["refl"])
+            rng = np.random.default_rng(c["seed"] + int(path.stem))
             for wi, win in enumerate(wins):
                 if window_cloud(z["scl"], win, c["cloud_scl_classes"]) > 0.20:
                     continue
                 lab = labels_for(win, rows_all, cols_all, rad_all, up)
-                if not lab:
+                if not lab and rng.random() > c["yolo"]["background_tile_share"]:
                     continue
                 crop = Image.fromarray(img[win[0]:win[2], win[1]:win[3]])
                 crop = crop.resize((crop.width * up, crop.height * up), Image.BICUBIC)
@@ -124,11 +125,13 @@ def evaluate(c):
     m = model.val(data=str(DS / "data.yaml"), split="test", imgsz=c["yolo"]["imgsz"],
                   conf=0.001, iou=0.6, plots=False, verbose=False)
     b = m.box
+    at = model.val(data=str(DS / "data.yaml"), split="test", imgsz=c["yolo"]["imgsz"],
+                   conf=c["yolo"]["conf"], iou=0.6, plots=False, verbose=False).box
     out = ROOT / "results"
     out.mkdir(exist_ok=True)
     n_img = len(list((DS / "test" / "images").glob("*.png")))
     n_lab = sum(len(p.read_text().split("\n")) - 1 for p in (DS / "test" / "labels").glob("*.txt"))
-    pd.DataFrame([{"split": "test_heldout_terminals", "precision": float(b.mp), "recall": float(b.mr),
+    pd.DataFrame([{"split": "test_heldout_terminals", "precision": float(at.mp), "recall": float(at.mr), "precision_maxf1": float(b.mp), "recall_maxf1": float(b.mr),
                    "map50": float(b.map50), "map50_95": float(b.map), "n_images": n_img,
                    "n_labels": n_lab}]).to_csv(out / "ml_yolo_metrics.csv", index=False)
     rec, prec = np.asarray(b.px), np.asarray(b.prec_values)[0]

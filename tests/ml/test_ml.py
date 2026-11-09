@@ -108,3 +108,54 @@ def test_no_credentials_in_source():
     pat = re.compile(r"(CDSE_PASSWORD|EIA_API_KEY)\s*[=:]\s*['\"][A-Za-z0-9!@#$%^&*._-]{12,}['\"]")
     for f in list((root / "src").rglob("*.py")) + list((root / "configs").rglob("*.yaml")):
         assert not pat.search(f.read_text()), f
+
+
+def test_split_keeps_eia_week_on_one_side():
+    from src.ml.train_cnn import split_fit_val
+    wk = pd.to_datetime(["2022-01-07"] * 2 + ["2022-01-14"] * 2 + ["2022-01-21"] * 2 + ["2022-01-28"] * 2)
+    df = pd.DataFrame({"split": "train", "usable": True, "week_end": wk})
+    fit, val = split_fit_val(df, 0.5)
+    assert wk[fit[-1]] != wk[val[0]]
+
+
+def test_metrics_and_verdicts_survive_empty_test():
+    from src.ml.evaluate import metrics_rows, verdicts
+    from src.ml.common import cfg
+    c = cfg()
+    m = metrics_rows(pd.DataFrame({"method": [], "tank_source": []}), c)
+    assert "ci_lo" in m and verdicts(m, c)["H3_registry"]["status"] == "NOT RUN"
+
+
+def test_env_credential_strips_quotes(tmp_path, monkeypatch):
+    from src.ml import common
+    (tmp_path / ".env").write_text('export CDSE_USERNAME="abc"\n')
+    monkeypatch.setattr(common, "ROOT", tmp_path)
+    monkeypatch.delenv("CDSE_USERNAME", raising=False)
+    assert common.env_credential("CDSE_USERNAME") == "abc"
+
+
+def test_metrics_verdicts_tables_on_synthetic_series():
+    """Synthetic predictions built from random noise around EIA weeks; checks plumbing only."""
+    from src.ml import report
+    from src.ml.common import cfg
+    from src.ml.eia import load_eia
+    from src.ml.evaluate import metrics_rows, verdicts
+    c = cfg()
+    c["stats"]["n_boot"] = 50
+    e = load_eia(c)
+    rng = np.random.default_rng(0)
+    frames = []
+    for method in ("cnn", "ridge", "sun_only", "seasonal", "train_mean"):
+        for split, lo, hi in (("train", c["splits"]["train_start"], c["splits"]["train_end"]),
+                              ("test", c["splits"]["test_start"], c["splits"]["test_end"])):
+            w = e[(e.week_end >= lo) & (e.week_end <= hi)].iloc[::2]
+            frames.append(pd.DataFrame({"method": method, "tank_source": "registry", "split": split, "usable": True,
+                                        "week_end": w.week_end.values, "eia_mbbl": w.eia_mbbl.values,
+                                        "pred_mbbl": w.eia_mbbl.values + rng.normal(0, 3000, len(w))}))
+    df = pd.concat(frames, ignore_index=True)
+    m = metrics_rows(df, c)
+    v = verdicts(m, c)
+    assert v["H3_registry"]["status"] in ("PASS", "FAIL") and v["H2"]["status"] == "NOT TESTABLE"
+    d = {"ml_eia_metrics": m, "ml_verdicts": {"verdicts": v}, "ml_weekly_inventory": df}
+    assert "| CNN |" in report.table_eia(d, c)
+    assert report.sentences(d)["h3_sentence"] != "[not yet run]"

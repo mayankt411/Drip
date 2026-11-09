@@ -10,7 +10,7 @@ A pre-registered study found that geometric shadow methods on free 10 m Sentinel
 
 # 1. Introduction
 
-The earlier pre-registered study (Protocol 2.0.0) tested three shadow-geometry methods on 10 tanks in one scene. The methods met the accuracy criterion on 3, 1 and 2 tanks respectively, and the roof-contrast check failed. That result says shadow geometry is too weak at 10 m. It does not say the imagery carries no inventory signal. A learned model can use reflectance and context that a geometric method ignores, so the question is worth one more test, under tighter controls and an honest label of its status.
+The earlier pre-registered study (Protocol 2.0.0) tested three shadow-geometry methods on 10 tanks in one scene. The methods met the accuracy criterion on 3, 1 and 2 tanks respectively, and the roof-contrast check failed. That result says shadow geometry is too weak at 10 m. It does not say the imagery carries no inventory signal. A learned model can use reflectance and context that a geometric method ignores, so the question is worth one more test, with baselines for season and sun angle and an honest label of its status.
 
 This paper reports that test. It is **not** confirmatory. The 2023 and 2024 windows were opened during the earlier study, and the design here was chosen after seeing that result.
 
@@ -30,9 +30,9 @@ This paper reports that test. It is **not** confirmatory. The 2023 and 2024 wind
 
 **Fill regression (Stage 2).** A small convolutional network takes a 16 x 16 x 6 chip per tank plus sun-geometry inputs and outputs a fill fraction. The hub estimate is the area-weighted mean fill over valid tanks, mapped to barrels by a positive affine transform fitted against EIA on training weeks. Five seeds are averaged. Early stopping uses a chronological inner validation split inside the training years.
 
-**Baselines.** To control for season and sun angle, the CNN is compared with (a) the training mean, (b) ridge regression on area-weighted disc reflectance (B04, B08, B11) plus sun elevation, and (c) ridge on sun elevation alone.
+**Baselines.** To control for season and sun angle, the CNN is compared with (a) the training mean, (b) ridge regression on area-weighted disc reflectance (B04, B08, B11) plus sun elevation, (c) ridge on the same four sun-geometry terms the CNN receives, and (d) ridge on day-of-year harmonics.
 
-**Statistics (Stage 3).** Pearson r, Spearman rho and R-squared on weekly pairs; first-difference correlation at lag 0 and 1 using strictly consecutive weeks. Confidence intervals use a stationary block bootstrap (mean block 4 weeks, 10000 draws). Hypothesis H3 requires r of at least 0.70 with a naive p below .001 **and** a bootstrap interval above zero, because the naive test ignores autocorrelation. H2 (per-tank MAE below 15% of capacity) is not tested.
+**Statistics (Stage 3).** Pearson r, Spearman rho and R-squared on weekly pairs; first-difference correlation at lag 0 and 1 using strictly consecutive weeks. Confidence intervals use a stationary block bootstrap (mean block 4 weeks, 10000 draws). Hypothesis H3 requires, on the test weeks, (i) r of at least 0.70 with a naive p below .001 and a bootstrap interval above zero, because the naive test ignores autocorrelation; (ii) bootstrap intervals above zero for the first-difference correlation at **both** lag 0 and lag 1; and (iii) a higher R-squared than every baseline. H2 (per-tank MAE below 15% of capacity) is not tested.
 
 # 4. Results
 

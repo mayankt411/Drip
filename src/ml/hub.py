@@ -30,6 +30,7 @@ def date_table(bank, reg, c, tank_ok, min_fraction):
     df = pd.DataFrame({"date": dates, "week_end": weeks, "split": split, "valid_fraction": frac})
     df = df.merge(eia, on="week_end", how="left")
     df["usable"] = (df.valid_fraction >= min_fraction) & df.week_end.notna() & (df.split != "outside")
+    df["usable"] &= df.eia_mbbl.notna()
     return df
 
 

@@ -22,10 +22,23 @@ def detected_mask(bank, reg, c):
     for k, d in enumerate(bank["dates"]):
         f = det_dir / f"{d}.csv"
         if not f.exists():
+            print(f"warning: no detections for {d}; the YOLO tank source is skipped")
             return None
         det = pd.read_csv(f)
         out[k] = match_detections(reg, det, c["yolo"]["iou_match_m"])
     return out
+
+
+def sun_features(bank, k):
+    """Same four sun-geometry terms the CNN sees."""
+    e, a = np.radians(bank["sun"][k])
+    return np.array([np.sin(a), np.cos(a), np.sin(e), np.cos(e)])
+
+
+def season_features(dt, k):
+    """Day-of-year harmonics: the plain seasonal control."""
+    t = 2 * np.pi * dt.date[k].dayofyear / 365.25
+    return np.array([np.sin(t), np.cos(t)])
 
 
 def weekly_rows(c):
@@ -51,9 +64,11 @@ def weekly_rows(c):
         mean_const = dt.loc[fit_k, "eia_mbbl"].mean()
         preds = {"cnn": cnn[:, 0], "ridge": np.array([rid(X[k][None])[0] if k in X else np.nan for k in dt.index]),
                  "train_mean": np.where(dt.usable, mean_const, np.nan)}
-        sun, _ = fit_ridge(np.array([X[k][[3]] for k in fit_k]), dt.loc[fit_k, "eia_mbbl"].to_numpy(),
-                           n["ridge_alphas"], np.array([X[k][[3]] for k in val_k]), dt.loc[val_k, "eia_mbbl"].to_numpy())
-        preds["sun_only"] = np.array([sun(X[k][[3]][None])[0] if k in X else np.nan for k in dt.index])
+        for name, feat in (("sun_only", lambda k: sun_features(bank, k)), ("seasonal", lambda k: season_features(dt, k))):
+            F = {k: feat(k) for k in X}
+            fn, _ = fit_ridge(np.array([F[k] for k in fit_k]), dt.loc[fit_k, "eia_mbbl"].to_numpy(),
+                              n["ridge_alphas"], np.array([F[k] for k in val_k]), dt.loc[val_k, "eia_mbbl"].to_numpy())
+            preds[name] = np.array([fn(F[k][None])[0] if k in F else np.nan for k in dt.index])
         for method, p in preds.items():
             f = dt.copy()
             f["method"], f["tank_source"], f["pred_mbbl"] = method, src, p
@@ -96,7 +111,13 @@ def metrics_rows(df, c):
                         tag = "" if b == st["block_lengths"][0] else f"_b{b}"
                         row[f"ci_lo{tag}"], row[f"ci_hi{tag}"] = lo, hi
                 rows.append(row)
-    return pd.DataFrame(rows)
+    cols = ["method", "tank_source", "split", "metric", "n_pairs", "pearson_r", "pearson_p", "spearman_rho",
+            "spearman_p", "r2", "rmse", "ci_lo", "ci_hi"]
+    out = pd.DataFrame(rows)
+    for col in cols + [f"ci_{e}_b{b}" for b in st["block_lengths"][1:] for e in ("lo", "hi")]:
+        if col not in out:
+            out[col] = np.nan
+    return out
 
 
 def verdicts(metrics, c):
@@ -117,11 +138,13 @@ def verdicts(metrics, c):
         lvl = sub[sub.metric == "level"].iloc[0]
         d = sub[sub.metric.str.startswith("diff")]
         level_ok = bool(lvl.pearson_r >= st["level_r_min"] and lvl.pearson_p < st["level_p_max"] and lvl.ci_lo > 0)
-        diff_ok = bool((d.ci_lo > 0).any())
+        diff_ok = bool(len(d) == len(st["diff_lags"]) and (d.ci_lo > 0).all())
         base = metrics[(metrics.tank_source == source) & (metrics.split == "test") & (metrics.metric == "level") & (metrics.method != "cnn")]
-        v[f"H3_{source}"] = {"status": "PASS" if (level_ok and diff_ok) else "FAIL", "level_pass": level_ok,
-                             "diff_pass": diff_ok, "pearson_r": float(lvl.pearson_r), "pearson_p": float(lvl.pearson_p),
-                             "r2": float(lvl.r2), "best_baseline_r2": float(base.r2.max()) if len(base) else None}
+        best_base = float(base.r2.max()) if len(base) and base.r2.notna().any() else None
+        beats = bool(best_base is None or (lvl.r2 > best_base))
+        v[f"H3_{source}"] = {"status": "PASS" if (level_ok and diff_ok and beats) else "FAIL", "level_pass": level_ok,
+                             "diff_pass": diff_ok, "beats_baselines": beats, "pearson_r": float(lvl.pearson_r),
+                             "pearson_p": float(lvl.pearson_p), "r2": float(lvl.r2), "best_baseline_r2": best_base}
     return v
 
 

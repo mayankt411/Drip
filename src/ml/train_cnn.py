@@ -14,6 +14,9 @@ def split_fit_val(dates_df, share):
     """Chronological split of the usable training dates into fit and inner-validation."""
     idx = dates_df.index[(dates_df.split == "train") & dates_df.usable].tolist()
     cut = int(round(len(idx) * (1 - share)))
+    wk = dates_df.week_end
+    while 0 < cut < len(idx) and wk[idx[cut]] == wk[idx[cut - 1]]:
+        cut += 1  # keep one EIA week on a single side of the cut
     return idx[:cut], idx[cut:]
 
 
@@ -25,6 +28,8 @@ def band_stats(bank, tank_ok, idx):
 
 def train_seed(seed, bank, reg, tank_ok, dates_df, fit, val, c, device):
     n = c["cnn"]
+    if len(val) < 5 or len(fit) < 10:
+        raise SystemExit(f"too few usable training dates (fit {len(fit)}, val {len(val)}); check the cubes and cloud filters")
     seed_all(seed)
     ymu, ysd = dates_df.loc[fit, "eia_mbbl"].mean(), dates_df.loc[fit, "eia_mbbl"].std()
     z = ((dates_df.eia_mbbl - ymu) / ysd).to_numpy()
@@ -63,6 +68,8 @@ def train_seed(seed, bank, reg, tank_ok, dates_df, fit, val, c, device):
             bad += 1
             if bad >= n["patience"]:
                 break
+    if state is None:
+        state = {k: v.clone() for k, v in model.state_dict().items()}
     model.load_state_dict(state)
     return model, ymu, ysd, log, best
 

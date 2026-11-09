@@ -61,8 +61,11 @@ def env_credential(name):
     env = ROOT / ".env"
     if env.exists():
         for line in env.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith("export "):
+                line = line[7:]
             if line.startswith(name + "="):
-                return line.split("=", 1)[1].strip()
+                return line.split("=", 1)[1].strip().strip("\"'")
     raise RuntimeError(f"{name} is not set; put it in your environment or a local .env (gitignored)")
 
 

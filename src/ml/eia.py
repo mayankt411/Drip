@@ -45,7 +45,8 @@ def fetch_eia(start, end, c=None):
               "start": start, "end": end, "sort[0][column]": "period",
               "sort[0][direction]": "asc", "length": 5000}
     r = requests.get(url, params=params, timeout=60)
-    r.raise_for_status()
+    if not r.ok:
+        raise RuntimeError(f"EIA request failed with HTTP {r.status_code}")
     out = ROOT / "data" / "raw" / f"eia_cushing_weekly_{start}_{end}.json"
     out.write_text(r.text, encoding="utf-8")
     log_manifest(url, f"series={c['eia']['series']};start={start};end={end}", c["eia"]["series"], "NA", sha256(out), "SUCCESS")

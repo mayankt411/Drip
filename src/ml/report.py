@@ -12,7 +12,7 @@ from .common import ROOT, cfg
 RES = ROOT / "results"
 PAPER = ROOT / "paper"
 BLUE, ORANGE, GREEN, GREY = "#0072B2", "#D55E00", "#009E73", "#555555"
-LABEL = {"cnn": "CNN", "ridge": "Ridge (B04, B08, B11, sun)", "sun_only": "Ridge (sun elevation only)",
+LABEL = {"seasonal": "Ridge (day of year)", "cnn": "CNN", "ridge": "Ridge (B04, B08, B11, sun)", "sun_only": "Ridge (sun geometry only)",
          "train_mean": "Training mean"}
 
 
@@ -48,7 +48,7 @@ def table_yolo(d, c):
         f"| mAP@50 | {fmt(r.map50)} | ≥ {fmt(c['h1']['map50_min'])} |",
         f"| mAP@50–95 | {fmt(r.map50_95)} | n/a |",
         f"| Test images / labelled tanks | {int(r.n_images)} / {int(r.n_labels)} | n/a |", "",
-        "*Note.* Labels come from OpenStreetMap footprints, so they are noisy; detections of tanks missing from OSM count as false positives."])
+        "*Note.* Precision and recall are at the deployment confidence threshold; mAP uses all thresholds. Labels come from OpenStreetMap footprints, so they are noisy; detections of tanks missing from OSM count as false positives."])
 
 
 def table_cnn(d, c):
@@ -77,11 +77,13 @@ def table_eia(d, c):
     t = m[m.split == "test"]
     for (method, src), g in t.groupby(["method", "tank_source"]):
         lv = g[g.metric == "level"].iloc[0]
+        if any((g.metric == f"diff_lag{k}").sum() == 0 for k in (0, 1)):
+            continue
 
         def ci(row):
             return f"{fmt(row.pearson_r)} [{fmt(row.ci_lo)}, {fmt(row.ci_hi)}]" if "ci_lo" in row and not np.isnan(row.get("ci_lo", np.nan)) else fmt(row.pearson_r)
         dl = {k: g[g.metric == f"diff_lag{k}"].iloc[0] for k in (0, 1)}
-        rows.append(f"| {LABEL[method]} | {src} | {int(lv.n_pairs)} | {fmt(lv.pearson_r)} | {fmt_p(lv.get('pearson_p', np.nan))} | "
+        rows.append(f"| {LABEL.get(method, method)} | {src} | {int(lv.n_pairs)} | {fmt(lv.pearson_r)} | {fmt_p(lv.get('pearson_p', np.nan))} | "
                     f"[{fmt(lv.get('ci_lo', np.nan))}, {fmt(lv.get('ci_hi', np.nan))}] | {fmt(lv.get('spearman_rho', np.nan))} | "
                     f"{fmt(lv.get('r2', np.nan))} | {ci(dl[0])} | {ci(dl[1])} |")
     rows += ["", f"*Note.* Level statistics use weeks with a valid satellite pass. *p* is the naive Pearson test and ignores autocorrelation; "
@@ -111,6 +113,8 @@ def figure_eia(d, c):
     ax[0].set_ylabel("Cushing stocks (million bbl)")
     ax[0].legend(frameon=False, fontsize=8)
     t = wk[wk.split == "test"]
+    if t.empty:
+        return False
     ax[1].scatter(t.eia / 1000, t.pred / 1000, s=16, color=ORANGE)
     lim = [min(t.eia.min(), t.pred.min()) / 1000 - 1, max(t.eia.max(), t.pred.max()) / 1000 + 1]
     ax[1].plot(lim, lim, color=GREY, lw=1, ls="--")
@@ -134,7 +138,8 @@ def figure_yolo(d, c):
     p = pd.read_csv(pr)
     plt.rcParams.update({"svg.fonttype": "none", "font.size": 9})
     imgs = sorted((ROOT / "data" / "ml" / "yolo" / "test" / "images").glob("*.png"))[:2]
-    fig, ax = plt.subplots(1, 1 + len(imgs), figsize=(9, 3.2))
+    fig, ax = plt.subplots(1, 1 + len(imgs), figsize=(9, 3.2), squeeze=False)
+    ax = ax[0]
     ax[0].plot(p.recall, p.precision, color=BLUE, lw=1.6)
     ax[0].set(xlabel="Recall", ylabel="Precision", xlim=(0, 1), ylim=(0, 1.02))
     ax[0].spines[["top", "right"]].set_visible(False)
@@ -156,7 +161,7 @@ def figure_yolo(d, c):
                 a.add_patch(plt.Rectangle((b[0], b[1]), b[2] - b[0], b[3] - b[1], fill=False, ec=ORANGE, lw=1.2, ls="--"))
             a.set_title("green: OSM label, orange: detection", fontsize=8)
     except Exception as e:
-        ax[1].text(0.5, 0.5, f"overlay unavailable:\n{type(e).__name__}", ha="center")
+        ax[0].set_title(f"overlay unavailable: {type(e).__name__}", fontsize=8)
     fig.tight_layout()
     fig.savefig(PAPER / "figures" / "yolo_detection.svg")
     return True
@@ -188,11 +193,11 @@ def sentences(d):
     v = d["ml_verdicts"]["verdicts"] if d["ml_verdicts"] else {}
     s = {}
     h1 = v.get("H1", {}).get("status")
-    s["h1_sentence"] = {"PASS": "The detector met both pre-specified thresholds on the held-out terminals.",
-                        "FAIL": "The detector did not meet the pre-specified thresholds on the held-out terminals."}.get(h1, "[not yet run]")
-    h3 = v.get("H3_yolo", v.get("H3_registry", {})).get("status")
-    s["h3_sentence"] = {"PASS": "The CNN hub series met the pre-specified level and first-difference criteria in this exploratory test.",
-                        "FAIL": "The CNN hub series did not meet the pre-specified level and first-difference criteria."}.get(h3, "[not yet run]")
+    s["h1_sentence"] = {"PASS": "The detector met both thresholds on the held-out terminals.",
+                        "FAIL": "The detector did not meet the thresholds on the held-out terminals."}.get(h1, "[not yet run]")
+    h3 = next((v[k]["status"] for k in ("H3_yolo", "H3_registry") if v.get(k, {}).get("status") in ("PASS", "FAIL")), None)
+    s["h3_sentence"] = {"PASS": "The CNN hub series met the level, first-difference and baseline criteria in this exploratory test.",
+                        "FAIL": "The CNN hub series did not meet all of the level, first-difference and baseline criteria."}.get(h3, "[not yet run]")
     base = d["ml_eia_metrics"]
     s["baseline_sentence"] = "[not yet run]"
     if base is not None and h3:
@@ -204,7 +209,7 @@ def sentences(d):
             best = others.r2.idxmax()
             beats = t.loc["cnn", "r2"] > others.r2.max()
             s["baseline_sentence"] = (f"On test weeks the CNN {'had a higher' if beats else 'did not have a higher'} R² than every baseline "
-                                      f"(best baseline: {LABEL[best]}, R² = {fmt(others.r2.max())}; CNN R² = {fmt(t.loc['cnn','r2'])}).")
+                                      f"(best baseline: {LABEL.get(best, best)}, R² = {fmt(others.r2.max())}; CNN R² = {fmt(t.loc['cnn','r2'])}).")
     return s
 
 
