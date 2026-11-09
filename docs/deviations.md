@@ -60,3 +60,6 @@ The manifest checksums for `data/raw/eia_cushing_weekly_2024.json` and `data/raw
 
 ### Note 009: No retrieval timestamps for 2024 files
 The 2024 manifest rows (STAC catalogue, EIA series, rasters) do not record retrieval times. That they were obtained after the protocol lock (`ede4a3f`, 2026-11-03) rests on the commit history: they first appear in `8087717` (2026-11-04).
+
+## Note 010: Exploratory ML follow-up (branch ml-pivot)
+After the pre-registered study returned a negative result, a separate ML analysis was added (src/ml, paper/paper.md). It is post hoc: the 2023-2024 windows had been inspected earlier, so all verdicts are exploratory. Supervision is hub-level EIA stocks only; per-tank accuracy (H2) is not testable. The tank registry comes from OpenStreetMap with a footprint-area proxy for capacity. The confirmatory paper is preserved as paper/paper_confirmatory.md. No ML results existed at the time of this note: the code was unit-tested on synthetic arrays only.

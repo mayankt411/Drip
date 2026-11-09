@@ -1,7 +1,7 @@
 """Tables, Figure 1 and paper numbers for the locked 2024 confirmatory run.
 
-Reads only committed result files. Every number in paper/paper.md comes
-from here; the paper itself is filled in from paper/paper_template.md.
+Reads only committed result files. Every number in paper/paper_confirmatory.md comes
+from here; the paper itself is filled in from paper/paper_confirmatory_template.md.
 """
 import csv
 import json
@@ -327,11 +327,11 @@ def main():
     (OUT / "figures" / "figure1.svg").write_text(figure1(q1, lmax), encoding="utf-8")
     (ROOT / "results" / "paper_numbers.json").write_text(json.dumps(nums, indent=2) + "\n", encoding="utf-8")
 
-    template = OUT / "paper_template.md"
+    template = OUT / "paper_confirmatory_template.md"
     if template.exists():
         fill = {**{k: str(v) for k, v in nums.items()}, **tables}
         text = re.sub(r"\{\{(\w+)\}\}", lambda g: fill[g.group(1)], template.read_text(encoding="utf-8"))
-        (OUT / "paper.md").write_text(text, encoding="utf-8")
+        (OUT / "paper_confirmatory.md").write_text(text, encoding="utf-8")
     print("ok:", len(nums), "numbers,", len(tables), "tables, figure written")
 
 

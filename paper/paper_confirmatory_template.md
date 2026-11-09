@@ -1,4 +1,4 @@
-<!-- Generated into paper/paper.md by src/report/make_confirmatory_report.py. Edit this template, not paper.md. -->
+<!-- Generated into paper/paper_confirmatory.md by src/report/make_confirmatory_report.py. Edit this template, not the output. -->
 
 # Empirical Limits of Free 10-Meter Sentinel-2 Imagery for Floating-Roof Oil Storage Monitoring: A Pre-Registered Confirmatory Study at Cushing, Oklahoma
 

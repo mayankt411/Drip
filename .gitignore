@@ -19,3 +19,11 @@ data/raw/rasters/
 # System artifacts
 .DS_Store
 Thumbs.db
+
+# ML pipeline outputs (large, regenerated)
+data/ml/yolo/
+data/processed/
+data/raw/ml/
+models/**/*.pt
+!models/yolo_tank_best.pt
+runs/

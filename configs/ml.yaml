@@ -1,0 +1,77 @@
+# ML pivot (exploratory). Windows and thresholds are set before any model is trained.
+aoi_config: configs/aoi.yaml
+utm_crs: "EPSG:32614"
+tiles: ["T14SQE", "T14SPE"]
+seed: 7
+
+scenes:
+  max_scene_cloud_percent: 20.0
+  window_start: "2021-01-01"
+  window_end: "2024-06-30"
+
+bands:
+  ten_m: ["B02", "B03", "B04", "B08"]
+  twenty_m: ["B11", "B12"]
+  scl: "SCL_20m"
+cloud_scl_classes: [3, 8, 9, 10, 11]
+
+registry:
+  overpass_url: "https://overpass-api.de/api/interpreter"
+  min_diameter_m: 30.0
+  cluster_link_m: 1500.0
+  heldout_share: 0.30
+
+splits:
+  train_start: "2021-01-01"
+  train_end: "2022-12-31"
+  test_start: "2023-01-01"
+  test_end: "2024-06-30"
+  yolo_val_start: "2022-07-01"
+  val_share_weeks: 0.20
+
+yolo:
+  weights: "yolov8n.pt"
+  upscale: 4
+  tile_px: 160
+  tile_overlap_px: 16
+  window_margin_px: 15
+  background_tile_share: 0.10
+  epochs: 100
+  imgsz: 640
+  batch: 16
+  conf: 0.25
+  iou_match_m: 30.0
+  checkpoint: "models/yolo_tank_best.pt"
+
+cnn:
+  arch: "convnet"
+  chip_px: 16
+  epochs: 400
+  patience: 40
+  lr: 0.002
+  weight_decay: 0.0005
+  dropout: 0.3
+  seeds: [11, 12, 13, 14, 15]
+  max_tank_cloud_fraction: 0.20
+  min_valid_fraction: 0.80
+  min_valid_fraction_yolo: 0.60
+  ridge_alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+  checkpoint_dir: "models/cnn"
+
+eia:
+  series: "W_EPC0_SAX_YCUOK_MBBL"
+  files: ["data/raw/eia_cushing_weekly_2021_2023.json", "data/raw/eia_cushing_weekly_2024.json"]
+
+stats:
+  block_lengths: [4, 2, 8]
+  n_boot: 10000
+  ci: 0.95
+  level_r_min: 0.70
+  level_p_max: 0.001
+  diff_lags: [0, 1]
+
+h1:
+  map50_min: 0.85
+  precision_min: 0.80
+h2:
+  mae_pct_max: 15.0

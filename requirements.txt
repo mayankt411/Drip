@@ -12,3 +12,7 @@ scikit-image==0.23.2
 pysolar==0.11
 pytest==8.2.2
 python-dotenv==1.0.1
+torch>=2.2
+torchvision>=0.17
+ultralytics>=8.2
+Pillow>=10.0
