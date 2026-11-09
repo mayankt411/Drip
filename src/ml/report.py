@@ -31,7 +31,7 @@ def load():
         d[name] = pd.read_csv(f) if f.exists() else None
     for name in ("ml_verdicts", "ml_cnn_training_summary"):
         f = RES / f"{name}.json"
-        d[name] = json.loads(f.read_text()) if f.exists() else None
+        d[name] = json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
     return d
 
 
@@ -152,7 +152,7 @@ def figure_yolo(d, c):
             a.imshow(im)
             a.axis("off")
             lab = f.parent.parent / "labels" / (f.stem + ".txt")
-            for line in lab.read_text().split("\n"):
+            for line in lab.read_text(encoding="utf-8").split("\n"):
                 if line:
                     _, cx, cy, bw, bh = map(float, line.split())
                     a.add_patch(plt.Rectangle(((cx - bw / 2) * im.width, (cy - bh / 2) * im.height), bw * im.width, bh * im.height,
@@ -169,7 +169,7 @@ def figure_yolo(d, c):
 
 def numbers(d, c):
     n = {}
-    prior = json.loads((RES / "paper_numbers.json").read_text())
+    prior = json.loads((RES / "paper_numbers.json").read_text(encoding="utf-8"))
     for k in ("m1_pass", "m2_pass", "m3_pass", "cnr_mean", "n_tanks", "median_min", "median_max"):
         n[f"prior_{k}"] = prior[k]
     v = d["ml_verdicts"]

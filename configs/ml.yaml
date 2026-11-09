@@ -38,7 +38,7 @@ yolo:
   background_tile_share: 0.10
   epochs: 100
   imgsz: 640
-  batch: 16
+  batch: 8
   conf: 0.25
   iou_match_m: 30.0
   checkpoint: "models/yolo_tank_best.pt"

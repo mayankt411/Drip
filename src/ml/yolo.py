@@ -94,11 +94,12 @@ def build_dataset(c):
                 crop = crop.resize((crop.width * up, crop.height * up), Image.BICUBIC)
                 name = f"{path.stem}_{part}_{wi:03d}"
                 crop.save(DS / part / "images" / f"{name}.png")
-                (DS / part / "labels" / f"{name}.txt").write_text("\n".join(lab) + "\n")
+                (DS / part / "labels" / f"{name}.txt").write_text("\n".join(lab) + "\n", encoding="utf-8")
                 n_img += 1
         counts[part] = n_img
     (DS / "data.yaml").write_text(
-        f"path: {DS}\ntrain: train/images\nval: val/images\ntest: test/images\nnames:\n  0: tank\n")
+        f'path: "{DS.as_posix()}"\ntrain: train/images\nval: val/images\ntest: test/images\nnames:\n  0: tank\n',
+        encoding="utf-8")
     return counts
 
 
@@ -130,7 +131,7 @@ def evaluate(c):
     out = ROOT / "results"
     out.mkdir(exist_ok=True)
     n_img = len(list((DS / "test" / "images").glob("*.png")))
-    n_lab = sum(len(p.read_text().split("\n")) - 1 for p in (DS / "test" / "labels").glob("*.txt"))
+    n_lab = sum(len(p.read_text(encoding="utf-8").split("\n")) - 1 for p in (DS / "test" / "labels").glob("*.txt"))
     pd.DataFrame([{"split": "test_heldout_terminals", "precision": float(at.mp), "recall": float(at.mr), "precision_maxf1": float(b.mp), "recall_maxf1": float(b.mr),
                    "map50": float(b.map50), "map50_95": float(b.map), "n_images": n_img,
                    "n_labels": n_lab}]).to_csv(out / "ml_yolo_metrics.csv", index=False)

@@ -107,7 +107,7 @@ def test_no_credentials_in_source():
     root = pathlib.Path(__file__).resolve().parents[2]
     pat = re.compile(r"(CDSE_PASSWORD|EIA_API_KEY)\s*[=:]\s*['\"][A-Za-z0-9!@#$%^&*._-]{12,}['\"]")
     for f in list((root / "src").rglob("*.py")) + list((root / "configs").rglob("*.yaml")):
-        assert not pat.search(f.read_text()), f
+        assert not pat.search(f.read_text(encoding="utf-8")), f
 
 
 def test_split_keeps_eia_week_on_one_side():
@@ -128,7 +128,7 @@ def test_metrics_and_verdicts_survive_empty_test():
 
 def test_env_credential_strips_quotes(tmp_path, monkeypatch):
     from src.ml import common
-    (tmp_path / ".env").write_text('export CDSE_USERNAME="abc"\n')
+    (tmp_path / ".env").write_text('export CDSE_USERNAME="abc"\n', encoding="utf-8")
     monkeypatch.setattr(common, "ROOT", tmp_path)
     monkeypatch.delenv("CDSE_USERNAME", raising=False)
     assert common.env_credential("CDSE_USERNAME") == "abc"

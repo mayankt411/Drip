@@ -4,7 +4,9 @@ Credentials come from CDSE_USERNAME / CDSE_PASSWORD in the environment or a loca
 Every raw band file is hashed into data/manifest.csv before it is deleted.
 """
 import argparse
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import numpy as np
 import pandas as pd
@@ -16,20 +18,24 @@ from .cube import BAND_ORDER, crop_product, make_grid, mosaic
 TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
 CUBES = ROOT / "data" / "processed" / "cubes"
 RAWDIR = ROOT / "data" / "raw" / "rasters_ml"
+MANIFEST_LOCK = threading.Lock()
 
 
 class Auth:
     def __init__(self):
         self.token, self.t0 = None, 0.0
+        self.lock = threading.Lock()
 
     def header(self):
-        if self.token is None or time.time() - self.t0 > 420:
-            r = requests.post(TOKEN_URL, timeout=60, data={
-                "client_id": "cdse-public", "grant_type": "password",
-                "username": env_credential("CDSE_USERNAME"), "password": env_credential("CDSE_PASSWORD")})
-            r.raise_for_status()
-            self.token, self.t0 = r.json()["access_token"], time.time()
-        return {"Authorization": f"Bearer {self.token}"}
+        with self.lock:
+            if self.token is None or time.time() - self.t0 > 420:
+                r = requests.post(TOKEN_URL, timeout=60, data={
+                    "client_id": "cdse-public", "grant_type": "password",
+                    "username": env_credential("CDSE_USERNAME"), "password": env_credential("CDSE_PASSWORD")})
+                if not r.ok:
+                    raise RuntimeError(f"CDSE login failed with HTTP {r.status_code}")
+                self.token, self.t0 = r.json()["access_token"], time.time()
+            return {"Authorization": f"Bearer {self.token}"}
 
 
 def fetch(url, dest, auth, tries=4):
@@ -62,8 +68,9 @@ def process_date(date, rows, grid, auth, keep_raw):
             url = p[key]
             dest = RAWDIR / p.product_id / url.split("Nodes(")[-1].split(")")[0]
             fetch(url, dest, auth)
-            log_manifest(url.split("/$value")[0][:200], f"tile={p.tile};band={b}", p.product_id,
-                         p.cloud, sha256(dest), "SUCCESS")
+            with MANIFEST_LOCK:
+                log_manifest(url.split("/$value")[0][:200], f"tile={p.tile};band={b}", p.product_id,
+                             p.cloud, sha256(dest), "SUCCESS")
             files[b] = dest
         parts.append(crop_product(files, p.scale, p.offset, grid))
         used.append(p.product_id)
@@ -82,6 +89,7 @@ def main():
     ap.add_argument("--start", default=None)
     ap.add_argument("--end", default=None)
     ap.add_argument("--keep-raw", action="store_true")
+    ap.add_argument("--workers", type=int, default=3, help="dates downloaded at once (CDSE allows 4 connections)")
     ap.add_argument("--limit", type=int, default=None, help="only the first N dates")
     a = ap.parse_args()
     c = cfg()
@@ -92,9 +100,18 @@ def main():
         df = df[df.date <= a.end]
     dates = sorted(df.date.unique())[: a.limit]
     grid, auth = make_grid(c), Auth()
-    for i, d in enumerate(dates, 1):
-        print(f"[{i}/{len(dates)}] {d}", process_date(d, df[df.date == d], grid, auth, a.keep_raw), flush=True)
-
+    failed = []
+    with ThreadPoolExecutor(max_workers=a.workers) as pool:
+        futs = {pool.submit(process_date, d, df[df.date == d], grid, auth, a.keep_raw): d for d in dates}
+        for i, f in enumerate(as_completed(futs), 1):
+            d = futs[f]
+            try:
+                print(f"[{i}/{len(dates)}] {d} {f.result()}", flush=True)
+            except Exception as e:
+                failed.append(d)
+                print(f"[{i}/{len(dates)}] {d} FAILED {type(e).__name__}: {e}", flush=True)
+    if failed:
+        raise SystemExit(f"{len(failed)} dates failed; rerun to retry them: {failed[:5]}")
 
 if __name__ == "__main__":
     main()

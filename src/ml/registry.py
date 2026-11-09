@@ -62,7 +62,13 @@ def query_overpass(c):
     b = aoi(c)
     q = (f'[out:json][timeout:180];way["man_made"="storage_tank"]'
          f'({b["south"]},{b["west"]},{b["north"]},{b["east"]});out geom tags;')
-    r = requests.post(c["registry"]["overpass_url"], data={"data": q}, timeout=240)
+    head = {"User-Agent": "cushing-storage-study/1.0 (academic research)", "Accept": "*/*"}
+    urls = [c["registry"]["overpass_url"], "https://overpass.private.coffee/api/interpreter"]
+    for url in urls:
+        r = requests.post(url, data={"data": q}, headers=head, timeout=240)
+        if r.ok:
+            break
+        print(f"overpass {url} returned {r.status_code}")
     r.raise_for_status()
     RAW.write_text(r.text, encoding="utf-8")
     log_manifest(c["registry"]["overpass_url"], q, "osm_storage_tanks_cushing", "NA", sha256(RAW), "SUCCESS")
