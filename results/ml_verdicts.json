@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "n_registry_tanks": 413,
+    "n_dates": 124,
+    "n_fit_dates": 47,
+    "n_val_dates": 12,
+    "n_usable_registry": 102,
+    "n_usable_yolo": 105
+  },
+  "verdicts": {
+    "H1": {
+      "status": "PASS",
+      "map50": 0.8764942910560043,
+      "precision": 0.9004162816775494,
+      "recall": 0.902525588579306
+    },
+    "H2": {
+      "status": "NOT TESTABLE",
+      "reason": "no per-tank fill labels; supervision is hub-level EIA only"
+    },
+    "H3_yolo": {
+      "status": "FAIL",
+      "level_pass": false,
+      "diff_pass": false,
+      "beats_baselines": false,
+      "pearson_r": 0.32170606334785595,
+      "pearson_p": 0.05217781670950416,
+      "r2": -0.5118849709103219,
+      "best_baseline_r2": -0.018679391876449403
+    },
+    "H3_registry": {
+      "status": "FAIL",
+      "level_pass": false,
+      "diff_pass": false,
+      "beats_baselines": false,
+      "pearson_r": 0.3045348672959686,
+      "pearson_p": 0.06685660018611513,
+      "r2": -0.5057178559694557,
+      "best_baseline_r2": -0.018679391876449403
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "n_fit_dates": 47,
+  "n_val_dates": 12,
+  "device": "cuda",
+  "seed_11_best_val_mse_z": 0.06648325394295777,
+  "seed_12_best_val_mse_z": 0.020755882568967838,
+  "seed_13_best_val_mse_z": 0.030861987305494647,
+  "seed_14_best_val_mse_z": 0.02674682568249409,
+  "seed_15_best_val_mse_z": 0.10222424137464259
+}

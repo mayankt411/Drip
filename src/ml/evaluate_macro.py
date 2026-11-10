@@ -56,7 +56,7 @@ def main():
     grid = eia[(eia.week_end >= s["test_start"]) & (eia.week_end <= s["test_end"])].reset_index(drop=True)
     grid["index"] = grid.week_end.map(test.set_index("week_end")["index"])
     season = season_fit(eia, c)
-    grid["season_pred"] = season(grid.week_end)
+    grid["season_pred"] = np.where(grid["index"].notna(), season(grid.week_end), np.nan)  # same weeks as the index
     rows = [metric_row("index_vs_eia_raw", grid["index"].to_numpy(), grid.eia_mbbl.to_numpy(), st, c, c["seed"]),
             metric_row(f"index_vs_eia_{win}wk_smoothed", grid["index"].to_numpy(), grid.eia_smooth.to_numpy(), st, c, c["seed"]),
             metric_row("season_only_vs_eia_raw", grid.season_pred.to_numpy(), grid.eia_mbbl.to_numpy(), st, c, c["seed"]),

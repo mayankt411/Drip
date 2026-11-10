@@ -1,0 +1,13 @@
+{
+  "status": "FAIL",
+  "r_ok": false,
+  "p_ok": false,
+  "ci_ok": false,
+  "beats_season": false,
+  "pearson_r": -0.20829828028258449,
+  "pearson_p": 0.21602552863131094,
+  "n_pairs": 37,
+  "season_r": 0.3056234507323271,
+  "raw_r": -0.14990843294537334,
+  "note": "naive p ignores autocorrelation, which smoothing makes worse; the bootstrap interval is also required"
+}

@@ -1,0 +1,2 @@
+hypothesis,status,n_tank_labels,reason
+H2,NOT_TESTABLE,0,no per-tank fill-level ground truth; the CNN is trained on hub-level EIA stocks only

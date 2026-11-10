@@ -1,0 +1,3 @@
+task,model,split,status,reason
+operational_active_vs_idle,none,none,NOT_TESTABLE,no independent activity labels; a variance-defined label would be circular
+structural_floating_vs_fixed,none,none,NOT_TESTABLE,"too few OSM-labelled tanks per class (train [0, 0], held-out [0, 0])"

@@ -1,0 +1,5 @@
+{
+  "selected": "yolov8s",
+  "rule": "highest validation mAP@50 (2022 dates, training terminals)",
+  "n_models": 3
+}

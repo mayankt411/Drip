@@ -1,0 +1,14 @@
+{
+  "labelled": 0,
+  "train": [
+    0,
+    0
+  ],
+  "heldout": [
+    0,
+    0
+  ],
+  "roof_tag_counts": {
+    "NaN": 413
+  }
+}
