@@ -32,3 +32,8 @@ logs/
 /yolo*.pt
 .venv/
 run_ml_local.ps1
+
+# Vendor packages
+vendor/
+generate_docx_paper.py
+
