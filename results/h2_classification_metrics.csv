@@ -1,3 +1,5 @@
-task,model,split,status,reason
-operational_active_vs_idle,none,none,NOT_TESTABLE,no independent activity labels; a variance-defined label would be circular
-structural_floating_vs_fixed,none,none,NOT_TESTABLE,"too few OSM-labelled tanks per class (train [0, 0], held-out [0, 0])"
+task,model,split,status,reason,n_test,accuracy,balanced_accuracy,macro_f1,cm_fixed_fixed,cm_fixed_float,cm_float_fixed,cm_float_float
+operational_active_vs_idle,none,none,NOT_TESTABLE,no independent activity labels; a variance-defined label would be circular,,,,,,,,
+structural_floating_vs_fixed,cnn,heldout_spatial_blocks_2023_2024,SCORED,,202.0,0.9752475247524752,0.9858757062146892,0.9473821307632195,25.0,0.0,5.0,172.0
+structural_floating_vs_fixed,ridge_band_means,heldout_spatial_blocks_2023_2024,SCORED,,202.0,0.9405940594059405,0.777175141242938,0.8335164835164837,14.0,11.0,1.0,176.0
+structural_floating_vs_fixed,majority,heldout_spatial_blocks_2023_2024,SCORED,,202.0,0.8762376237623762,0.5,0.4670184696569921,0.0,25.0,0.0,177.0

@@ -1,0 +1,6 @@
+task,model,split,status,reason,n_test,accuracy,balanced_accuracy,macro_f1,cm_fixed_fixed,cm_fixed_float,cm_float_fixed,cm_float_float
+operational_active_vs_idle,none,none,NOT_TESTABLE,no independent activity labels; a variance-defined label would be circular,,,,,,,,
+structural_floating_vs_fixed,cnn,heldout_spatial_blocks_2023_2024,SCORED,,51.0,0.9803921568627451,0.9814814814814814,0.980361956103196,24.0,0.0,1.0,26.0
+structural_floating_vs_fixed,ridge_band_means,heldout_spatial_blocks_2023_2024,SCORED,,51.0,0.8823529411764706,0.8773148148148148,0.8800940438871473,19.0,5.0,1.0,26.0
+structural_floating_vs_fixed,majority,heldout_spatial_blocks_2023_2024,SCORED,,51.0,0.5294117647058824,0.5,0.3461538461538462,0.0,24.0,0.0,27.0
+structural_floating_vs_fixed,diameter_rule,heldout_spatial_blocks_2023_2024,SCORED,,51.0,0.47058823529411764,0.49537037037037035,0.37437528396183556,22.0,2.0,25.0,2.0

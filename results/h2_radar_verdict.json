@@ -1,0 +1,54 @@
+{
+  "primary": "size_controlled",
+  "verdict": {
+    "size_controlled": {
+      "status": "PASS",
+      "accuracy_ok": true,
+      "f1_ok": true,
+      "beats_majority": true,
+      "beats_size_rule": true
+    },
+    "all_tanks": {
+      "status": "PASS",
+      "accuracy_ok": true,
+      "f1_ok": true,
+      "beats_majority": true,
+      "beats_size_rule": true
+    }
+  },
+  "counts": {
+    "size_controlled": {
+      "band_max_m": 40.0,
+      "train": [
+        25,
+        26
+      ],
+      "heldout": [
+        24,
+        27
+      ]
+    },
+    "all_tanks": {
+      "band_max_m": null,
+      "train": [
+        39,
+        161
+      ],
+      "heldout": [
+        25,
+        177
+      ]
+    }
+  },
+  "valid_tanks": 413,
+  "features": [
+    "mean_vv_db",
+    "mean_vv_max_db",
+    "mean_vh_db",
+    "mean_contrast_db",
+    "std_vv_db",
+    "std_vv_max_db",
+    "std_vh_db",
+    "std_contrast_db"
+  ]
+}

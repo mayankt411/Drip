@@ -1,0 +1,16 @@
+{
+  "labelled": 402,
+  "train": [
+    25,
+    26
+  ],
+  "heldout": [
+    24,
+    27
+  ],
+  "roof_tag_counts": {
+    "floating_roof": 338,
+    "dome": 64,
+    "NaN": 11
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "split": "split_h2",
+  "accuracy_ok": true,
+  "f1_ok": true,
+  "beats_majority": true,
+  "beats_ridge": true,
+  "status": "PASS"
+}

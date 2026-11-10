@@ -1,0 +1,81 @@
+{
+  "status": "PARTIAL",
+  "primary": {
+    "r_ok": true,
+    "p_ok": true,
+    "ci_ok": true,
+    "diff_ok": false,
+    "beats_baselines": true,
+    "placebo_ok": true,
+    "positive": true
+  },
+  "pooled_2020_2026": {
+    "r_ok": true,
+    "p_ok": true,
+    "ci_ok": true,
+    "diff_ok": true,
+    "beats_baselines": true,
+    "placebo_ok": true,
+    "positive": true
+  },
+  "claim": "Radar tracks the level, not weekly changes.",
+  "folds": {
+    "2020": {
+      "scored": true,
+      "n_train": 94,
+      "n_test": 47,
+      "alpha": 0.01
+    },
+    "2021": {
+      "scored": true,
+      "n_train": 141,
+      "n_test": 50,
+      "alpha": 0.01
+    },
+    "2022": {
+      "scored": true,
+      "n_train": 191,
+      "n_test": 28,
+      "alpha": 0.01
+    },
+    "2023": {
+      "scored": true,
+      "n_train": 219,
+      "n_test": 28,
+      "alpha": 0.01
+    },
+    "2024": {
+      "scored": true,
+      "n_train": 247,
+      "n_test": 28,
+      "alpha": 0.01
+    },
+    "2025": {
+      "scored": true,
+      "n_train": 275,
+      "n_test": 30,
+      "alpha": 0.01
+    },
+    "2026": {
+      "scored": true,
+      "n_train": 305,
+      "n_test": 24,
+      "alpha": 0.01
+    },
+    "v4_window1": {
+      "scored": true,
+      "n_train": 219,
+      "n_test": 42,
+      "alpha": 0.01
+    },
+    "v4_window2": {
+      "scored": true,
+      "n_train": 219,
+      "n_test": 68,
+      "alpha": 0.01
+    }
+  },
+  "v4_verdict_unchanged": "FAIL",
+  "variant": "floating_roof_tanks_only",
+  "note": "level and baseline rules use weekly units as in v4; difference rules use gap-tolerant pairs (rule B); variants are not used for the verdict"
+}
