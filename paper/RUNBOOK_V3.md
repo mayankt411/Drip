@@ -9,42 +9,22 @@ This runbook implements the restructured framework pivoting from fragile sub-pix
 
 ---
 
-## Step-by-Step Execution Plan
+## Status of the steps (updated)
 
-### Step 1: Environment Setup
-Ensure standard requirements are installed:
-```bash
-pip install -r requirements.txt
-pip install ultralytics torch torchvision
+H1 reuses the detector from the ML pivot (no separate retraining): `results/ml_yolo_metrics.csv`, `ml_yolo_compare.csv`. Run those steps first (`run_ml_local.ps1`), then:
+
+```
+python -m src.ml.train_classifier   # H2: structural labels from OSM roof tags only; operational task reported NOT_TESTABLE
+python -m src.ml.evaluate_macro     # H3: activity index vs EIA (raw and 4-week), bootstrap CI, day-of-year control
+python -m src.ml.report_v3          # tables, macro_utilization.svg, paper/paper_v3.md, results/h1_yolo_metrics.csv
 ```
 
-### Step 2: Build the Expanded Cushing Tank Census
-Run the OpenStreetMap Overpass extractor to pull all commercial storage tanks:
-```bash
-python -m src.ml.registry
-```
-*Outputs: `data/tanks/cushing_full_registry.csv` with 200+ commercial tanks.*
+Outputs: `results/h2_classification_metrics.csv`, `h2_label_counts.json`, `h2_tank_activity_index.csv`,
+`results/h3_macro_metrics.csv`, `h3_macro_weekly.csv`, `h3_verdict.json`, `paper/figures/macro_utilization.svg`, `paper/paper_v3.md`.
 
-### Step 3: Train and Evaluate YOLOv8 Tank Detector (H1)
-```bash
-python -m src.ml.yolo dataset
-python -m src.ml.yolo train --model yolov8s.pt --epochs 50
-python -m src.ml.yolo eval
-```
-*Outputs: `results/h1_yolo_metrics.csv` reporting mAP@50, Precision, Recall, and confusion matrix.*
+## Rules this run follows
 
-### Step 4: Multi-Spectral Structural & Activity Classification (H2)
-Extract multi-spectral chips and train the operational classifier:
-```bash
-python -m src.ml.chipbank
-python -m src.ml.train_classifier
-```
-*Outputs: `results/h2_classification_metrics.csv` evaluating floating vs fixed classification and active vs idle turnover.*
-
-### Step 5: Macro Capacity Utilization & EIA Benchmark (H3)
-Aggregate active operational turnover index and benchmark against 4-week smoothed EIA stocks:
-```bash
-python -m src.ml.evaluate_macro
-python -m src.ml.report_v3
-```
-*Outputs: `results/h3_macro_metrics.csv`, `paper/figures/macro_utilization.svg`, and `paper/paper_v3.md`.*
+- Targets are hypotheses. The paper reports what the numbers show; nothing is tuned toward them.
+- H2 structural needs enough OSM-labelled tanks per class (config: min_train_per_class 20, min_test_per_class 5), else it is reported as not testable. Active versus idle has no independent labels and is not tested.
+- H3 passes only if r, naive p, a bootstrap interval above zero and a better correlation than the day-of-year control all hold.
+- The paper is written to `paper/paper_v3.md` so the ML-pivot paper in `paper/paper.md` is not overwritten.

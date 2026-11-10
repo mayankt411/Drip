@@ -52,7 +52,7 @@ def table_yolo(d, c):
 
 
 def table_yolo_compare(d, c):
-    m = d["ml_yolo_compare"]
+    m = d.get("ml_yolo_compare")
     if m is None:
         return None
     rows = ["**Table 1b**", "", "*Detector Sizes Compared; Selection by Validation mAP@50*", "",
@@ -230,7 +230,7 @@ def sentences(d):
             beats = t.loc["cnn", "r2"] > others.r2.max()
             s["baseline_sentence"] = (f"On test weeks the CNN {'had a higher' if beats else 'did not have a higher'} R² than every baseline "
                                       f"(best baseline: {LABEL.get(best, best)}, R² = {fmt(others.r2.max())}; CNN R² = {fmt(t.loc['cnn','r2'])}).")
-    m = d["ml_yolo_compare"]
+    m = d.get("ml_yolo_compare")
     s["compare_sentence"] = "[not yet run]"
     if m is not None and m.selected.any():
         r = m[m.selected].iloc[0]
