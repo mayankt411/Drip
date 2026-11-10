@@ -50,7 +50,7 @@ This paper reports that test. It is **not** confirmatory. The 2023 and 2024 wind
 
 # 5. Discussion
 
-Interpretation depends on the verdicts above and on the baseline comparison. A high level correlation that a sun-elevation-only model matches would indicate a seasonal artefact, not an inventory signal. A first-difference correlation is the stricter check, since it removes slow trends shared by both series.
+{{discussion}}
 
 # 6. Limitations
 

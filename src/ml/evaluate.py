@@ -49,14 +49,15 @@ def weekly_rows(c):
     n = c["cnn"]
     base = date_table(bank, reg, c, ok, n["min_valid_fraction"])
     fit, val = split_fit_val(base, c["splits"]["val_share_weeks"])
-    models = load_models(c, "cuda" if torch.cuda.is_available() else "cpu")
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    models = load_models(c, dev)
     sources = {"registry": (ok, n["min_valid_fraction"])}
     if det is not None:
         sources["yolo"] = (ok & det, n["min_valid_fraction_yolo"])
     frames = []
     for src, (mask, frac) in sources.items():
         dt = date_table(bank, reg, c, mask, frac)
-        cnn = cnn_predict(models, bank, reg, mask, dt)
+        cnn = cnn_predict(models, bank, reg, mask, dt, dev)
         X = {k: ridge_features(bank, mask, reg, k) for k in dt.index[dt.usable]}
         fit_k, val_k = [k for k in fit if k in X], [k for k in val if k in X]
         rid, _ = fit_ridge(np.array([X[k] for k in fit_k]), dt.loc[fit_k, "eia_mbbl"].to_numpy(),

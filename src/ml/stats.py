@@ -6,7 +6,8 @@ from scipy import stats
 def pearson(x, y):
     x, y = np.asarray(x, float), np.asarray(y, float)
     ok = ~(np.isnan(x) | np.isnan(y))
-    if ok.sum() < 4 or np.std(x[ok]) == 0 or np.std(y[ok]) == 0:
+    flat = lambda a: np.ptp(a) <= 1e-9 * max(1.0, np.abs(a).max())
+    if ok.sum() < 4 or flat(x[ok]) or flat(y[ok]):
         return np.nan, ok.sum()
     return float(np.corrcoef(x[ok], y[ok])[0, 1]), int(ok.sum())
 

@@ -31,7 +31,7 @@ def load():
         d[name] = pd.read_csv(f) if f.exists() else None
     for name in ("ml_verdicts", "ml_cnn_training_summary"):
         f = RES / f"{name}.json"
-        d[name] = json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
+        d[name] = json.loads(f.read_text()) if f.exists() else None
     return d
 
 
@@ -43,10 +43,10 @@ def table_yolo(d, c):
     return "\n".join([
         "**Table 1**", "", "*Tank Detection on Held-Out Terminals (Test Dates 2023–2024)*", "",
         "| Metric | Value | Pre-specified threshold |", "|:--|--:|--:|",
-        f"| Precision | {fmt(r.precision)} | ≥ {fmt(c['h1']['precision_min'])} |",
-        f"| Recall | {fmt(r.recall)} | n/a |",
-        f"| mAP@50 | {fmt(r.map50)} | ≥ {fmt(c['h1']['map50_min'])} |",
-        f"| mAP@50–95 | {fmt(r.map50_95)} | n/a |",
+        f"| Precision | {fmt(r.precision, 3)} | ≥ {fmt(c['h1']['precision_min'])} |",
+        f"| Recall | {fmt(r.recall, 3)} | n/a |",
+        f"| mAP@50 | {fmt(r.map50, 3)} | ≥ {fmt(c['h1']['map50_min'])} |",
+        f"| mAP@50–95 | {fmt(r.map50_95, 3)} | n/a |",
         f"| Test images / labelled tanks | {int(r.n_images)} / {int(r.n_labels)} | n/a |", "",
         "*Note.* Precision and recall are at the deployment confidence threshold; mAP uses all thresholds. Labels come from OpenStreetMap footprints, so they are noisy; detections of tanks missing from OSM count as false positives."])
 
@@ -152,7 +152,7 @@ def figure_yolo(d, c):
             a.imshow(im)
             a.axis("off")
             lab = f.parent.parent / "labels" / (f.stem + ".txt")
-            for line in lab.read_text(encoding="utf-8").split("\n"):
+            for line in lab.read_text().split("\n"):
                 if line:
                     _, cx, cy, bw, bh = map(float, line.split())
                     a.add_patch(plt.Rectangle(((cx - bw / 2) * im.width, (cy - bh / 2) * im.height), bw * im.width, bh * im.height,
@@ -169,7 +169,7 @@ def figure_yolo(d, c):
 
 def numbers(d, c):
     n = {}
-    prior = json.loads((RES / "paper_numbers.json").read_text(encoding="utf-8"))
+    prior = json.loads((RES / "paper_numbers.json").read_text())
     for k in ("m1_pass", "m2_pass", "m3_pass", "cnr_mean", "n_tanks", "median_min", "median_max"):
         n[f"prior_{k}"] = prior[k]
     v = d["ml_verdicts"]
@@ -193,8 +193,13 @@ def sentences(d):
     v = d["ml_verdicts"]["verdicts"] if d["ml_verdicts"] else {}
     s = {}
     h1 = v.get("H1", {}).get("status")
-    s["h1_sentence"] = {"PASS": "The detector met both thresholds on the held-out terminals.",
-                        "FAIL": "The detector did not meet the thresholds on the held-out terminals."}.get(h1, "[not yet run]")
+    s["h1_sentence"] = "[not yet run]"
+    if h1 in ("PASS", "FAIL"):
+        h = v["H1"]
+        gap = h["map50"] - 0.85
+        s["h1_sentence"] = (f"The detector {'met' if h1 == 'PASS' else 'did not meet'} the thresholds on the held-out terminals: "
+                            f"mAP@50 was {h['map50']:.3f} and precision {h['precision']:.3f}"
+                            + (f" (mAP@50 {abs(gap):.3f} below the 0.85 threshold)." if gap < 0 else "."))
     h3 = next((v[k]["status"] for k in ("H3_yolo", "H3_registry") if v.get(k, {}).get("status") in ("PASS", "FAIL")), None)
     s["h3_sentence"] = {"PASS": "The CNN hub series met the level, first-difference and baseline criteria in this exploratory test.",
                         "FAIL": "The CNN hub series did not meet all of the level, first-difference and baseline criteria."}.get(h3, "[not yet run]")
@@ -210,7 +215,38 @@ def sentences(d):
             beats = t.loc["cnn", "r2"] > others.r2.max()
             s["baseline_sentence"] = (f"On test weeks the CNN {'had a higher' if beats else 'did not have a higher'} R² than every baseline "
                                       f"(best baseline: {LABEL.get(best, best)}, R² = {fmt(others.r2.max())}; CNN R² = {fmt(t.loc['cnn','r2'])}).")
+    s["discussion"] = discussion(d, v)
     return s
+
+
+def discussion(d, v):
+    inv, met = d["ml_weekly_inventory"], d["ml_eia_metrics"]
+    st = next((v[k]["status"] for k in ("H3_yolo", "H3_registry") if v.get(k, {}).get("status") in ("PASS", "FAIL")), None)
+    if inv is None or met is None or st is None:
+        return "[not yet run]"
+    src = "yolo" if ((inv.tank_source == "yolo") & inv.usable).any() else "registry"
+    g = inv[(inv.method == "cnn") & (inv.tank_source == src) & inv.usable].groupby(["split", "week_end"]).agg(
+        pred=("pred_mbbl", "mean"), eia=("eia_mbbl", "first")).reset_index()
+
+    def rng(sp, col):
+        x = g[g.split == sp][col]
+        return x.min() / 1000, x.max() / 1000
+    t = met[(met.split == "test") & (met.tank_source == src) & (met.metric == "level")].set_index("method")
+    c = t.loc["cnn"]
+    out = [f"On the test weeks the CNN hub series had r = {fmt(c.pearson_r)} (95% bootstrap CI [{fmt(c.ci_lo)}, {fmt(c.ci_hi)}]) "
+           f"and R\u00b2 = {fmt(c.r2)} against EIA stocks."]
+    if st == "FAIL":
+        pl, el, tl, tel = rng("test", "pred"), rng("test", "eia"), rng("train", "pred"), rng("train", "eia")
+        out.append(f"The estimates spanned only {pl[0]:.0f}\u2013{pl[1]:.0f} million bbl on test weeks while EIA spanned "
+                   f"{el[0]:.0f}\u2013{el[1]:.0f}; on training weeks the estimates spanned {tl[0]:.0f}\u2013{tl[1]:.0f} against "
+                   f"{tel[0]:.0f}\u2013{tel[1]:.0f}. The network therefore did not reproduce the stock variation even in the years it was fitted on, "
+                   "which points to a weak signal at this resolution and label quality rather than to overfitting.")
+    if "sun_only" in t.index and not np.isnan(t.loc["sun_only"].pearson_r):
+        out.append(f"A model that sees only sun geometry reached r = {fmt(t.loc['sun_only'].pearson_r)} on the same weeks, "
+                   "so correlations of either sign of this size can arise from season and sun angle alone.")
+    out.append("The first-difference correlations, which remove shared slow trends, were small and their intervals include zero." if st == "FAIL"
+               else "The first-difference correlations met the criterion; this still needs confirmation on an unopened window.")
+    return " ".join(out)
 
 
 def compile_paper(d, c):
