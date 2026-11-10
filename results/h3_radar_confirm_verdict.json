@@ -1,0 +1,33 @@
+{
+  "status": "FAIL",
+  "r_ok": true,
+  "p_ok": true,
+  "ci_ok": true,
+  "diff_ok": false,
+  "beats_baselines": true,
+  "pearson_r": 0.680251102742147,
+  "pearson_p": 1.765101280755582e-10,
+  "r2": 0.1846333538857683,
+  "best_baseline_r2": -24.14814708474547,
+  "n_test_weeks": 68,
+  "train_start": "2018-01-01",
+  "n_passes": 578,
+  "info": {
+    "radar_all": {
+      "alpha": 0.01,
+      "n_train": 219,
+      "n_test": 68
+    },
+    "radar_large_tanks": {
+      "alpha": 0.01,
+      "n_train": 219,
+      "n_test": 68
+    },
+    "radar_plus_season": {
+      "alpha": 0.01,
+      "n_train": 219,
+      "n_test": 68
+    }
+  },
+  "note": "radar_large_tanks and radar_plus_season are reported, not used for the verdict"
+}
