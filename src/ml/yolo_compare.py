@@ -17,12 +17,17 @@ def train_one(c, name, weights, batch):
     best = RUNS / name / "weights" / "best.pt"
     if best.exists():
         return best
+    flag = RUNS / f"{name}.started"
+    amp = not flag.exists()  # an earlier attempt died without finishing: train in full precision
+    RUNS.mkdir(parents=True, exist_ok=True)
+    flag.write_text("started", encoding="utf-8")
     while True:
         try:
             seed_all(c["seed"])
             YOLO(weights).train(data=str(DS / "data.yaml"), epochs=y["epochs"], imgsz=y["imgsz"], batch=batch,
-                                seed=c["seed"], project=str(RUNS), name=name, exist_ok=True,
+                                seed=c["seed"], project=str(RUNS), name=name, exist_ok=True, amp=amp,
                                 pretrained=weights.endswith(".pt"))
+            flag.unlink(missing_ok=True)
             return best
         except RuntimeError as e:
             if "out of memory" not in str(e).lower() or batch <= 2:
