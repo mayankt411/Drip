@@ -21,7 +21,7 @@ VARIANT = {False: "all_tanks", True: "floating_roof_tanks_only"}
 VARIANTS = ["radar_large_tanks", "radar_plus_season"]  # reported, never used for the verdict
 
 
-def setup(c, r, only_floating=False):
+def setup(c, r, only_floating=False, drop_bare=False):
     tanks = pd.read_csv(ev.REGISTRY)
     eia = ev.load_eia_all(c)
     meta, F = ev.load_passes()
@@ -32,6 +32,8 @@ def setup(c, r, only_floating=False):
     w = tanks.area_weight_m2.to_numpy()
     if only_floating:  # v4.2: keep only tanks read as open floating roofs; fixed roofs and unsure tanks get zero weight
         w = np.where((tanks.roof_shape == "floating_roof").to_numpy(), w, 0.0)
+    if drop_bare and "bare_ground" in tanks:  # v4.3: three registry entries that are bare ground, not tanks
+        w = np.where(tanks.bare_ground.to_numpy() == 1, 0.0, w)
     big = np.where(tanks.diameter_m.to_numpy() >= r["large_tank_min_m"], w, 0.0)
     return dict(meta=meta, F=F, w=w, big=big, eia=eia, r=r, start=start)
 
@@ -141,7 +143,7 @@ def scope_rows(scope, parts, eia, st, seed, with_placebo):
         rows += [row(f"level_{v}", W[v], y, r2=r2_of(W[v].to_numpy(), y)) for v in VARIANTS]
         rows += [row(f"level_{b}", W[b], y, ci=False, r2=r2_of(W[b].to_numpy(), y)) for b in ["season_only", "train_mean"]]
         rows.append(row("level_pass", P.radar_all, P.eia_interp, r2=r2_of(P.radar_all.to_numpy(float), P.eia_interp.to_numpy(float))))
-        for k in ["diff_lag0_week", "diff_lag1_week", "diff_lag0_gap", "diff_lag1_gap"]:
+        for k in ["diff_lag0_week", "diff_lag1_week", "diff_lag0_gap", "diff_lag1_gap"] + [k for k in parts[0]["pairs"] if k.endswith("_exact")]:
             rows.append(row(k, np.concatenate([p["pairs"][k][0] for p in parts]), np.concatenate([p["pairs"][k][1] for p in parts])))
         if with_placebo:
             p95, n = placebo(W, eia)

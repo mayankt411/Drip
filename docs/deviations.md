@@ -63,3 +63,6 @@ The 2024 manifest rows (STAC catalogue, EIA series, rasters) do not record retri
 
 ## Note 010: Exploratory ML follow-up (branch ml-pivot)
 After the pre-registered study returned a negative result, a separate ML analysis was added (src/ml, paper/paper.md). It is post hoc: the 2023-2024 windows had been inspected earlier, so all verdicts are exploratory. Supervision is hub-level EIA stocks only; per-tank accuracy (H2) is not testable. The tank registry comes from OpenStreetMap with a footprint-area proxy for capacity. The confirmatory paper is preserved as paper/paper_confirmatory.md. No ML results existed at the time of this note: the code was unit-tested on synthetic arrays only.
+
+## Note 011: Three bare-ground registry entries (2026-11-11)
+Registry rows 136, 142 and 219 (OSM_460925470, OSM_460925477, OSM_460925562) show bare ground in the aerial crops, not tanks. They are flagged `bare_ground = 1` in `data/tanks/cushing_full_registry.csv`; no row was deleted. They were left unsure in the roof labels, so H2 never used them. They were in the H1 training labels and in the v4, v4.1 and v4.2 radar hubs (together under 1% of tanks). Those results are frozen and were not recomputed. The YOLO model was not retrained. Radar v4.3 (`docs/preregistration_v4_3.md`) excludes the flagged rows.
