@@ -27,3 +27,8 @@ data/raw/ml/
 models/**/*.pt
 !models/yolo_tank_best.pt
 runs/
+
+logs/
+/yolo*.pt
+.venv/
+run_ml_local.ps1

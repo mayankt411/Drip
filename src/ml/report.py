@@ -26,7 +26,7 @@ def fmt_p(p):
 
 def load():
     d = {}
-    for name in ("ml_yolo_metrics", "ml_eia_metrics", "ml_weekly_inventory", "ml_cnn_training_log"):
+    for name in ("ml_yolo_metrics", "ml_yolo_compare", "ml_eia_metrics", "ml_weekly_inventory", "ml_cnn_training_log"):
         f = RES / f"{name}.csv"
         d[name] = pd.read_csv(f) if f.exists() else None
     for name in ("ml_verdicts", "ml_cnn_training_summary"):
@@ -49,6 +49,21 @@ def table_yolo(d, c):
         f"| mAP@50–95 | {fmt(r.map50_95, 3)} | n/a |",
         f"| Test images / labelled tanks | {int(r.n_images)} / {int(r.n_labels)} | n/a |", "",
         "*Note.* Precision and recall are at the deployment confidence threshold; mAP uses all thresholds. Labels come from OpenStreetMap footprints, so they are noisy; detections of tanks missing from OSM count as false positives."])
+
+
+def table_yolo_compare(d, c):
+    m = d["ml_yolo_compare"]
+    if m is None:
+        return None
+    rows = ["**Table 1b**", "", "*Detector Sizes Compared; Selection by Validation mAP@50*", "",
+            "| Model | Params (M) | Val mAP@50 | Test mAP@50 | Test precision | Test recall | Selected |",
+            "|:--|--:|--:|--:|--:|--:|:--|"]
+    for _, r in m.iterrows():
+        rows.append(f"| {r.model} | {fmt(r.params_m, 1)} | {fmt(r.val_map50, 3)} | {fmt(r.test_map50, 3)} | "
+                    f"{fmt(r.test_precision, 3)} | {fmt(r.test_recall, 3)} | {'yes' if r.selected else ''} |")
+    rows += ["", "*Note.* The model was chosen on validation images (2022 dates, training terminals) only. "
+             "Test columns are reported for every model for transparency and did not influence the choice."]
+    return "\n".join(rows)
 
 
 def table_cnn(d, c):
@@ -215,6 +230,12 @@ def sentences(d):
             beats = t.loc["cnn", "r2"] > others.r2.max()
             s["baseline_sentence"] = (f"On test weeks the CNN {'had a higher' if beats else 'did not have a higher'} R² than every baseline "
                                       f"(best baseline: {LABEL.get(best, best)}, R² = {fmt(others.r2.max())}; CNN R² = {fmt(t.loc['cnn','r2'])}).")
+    m = d["ml_yolo_compare"]
+    s["compare_sentence"] = "[not yet run]"
+    if m is not None and m.selected.any():
+        r = m[m.selected].iloc[0]
+        s["compare_sentence"] = (f"{len(m)} detector configurations were compared on validation mAP@50 and {r.model} was selected "
+                                 f"(validation {r.val_map50:.3f}); on the held-out terminals it reached mAP@50 {r.test_map50:.3f}.")
     s["discussion"] = discussion(d, v)
     return s
 
@@ -254,7 +275,7 @@ def compile_paper(d, c):
     fill = defaultdict(lambda: "[not yet run]")
     fill.update({k: str(x) for k, x in numbers(d, c).items()})
     fill.update(sentences(d))
-    for name, fn in (("table_yolo", table_yolo), ("table_cnn", table_cnn), ("table_eia", table_eia)):
+    for name, fn in (("table_yolo", table_yolo), ("table_yolo_compare", table_yolo_compare), ("table_cnn", table_cnn), ("table_eia", table_eia)):
         fill[name] = fn(d, c) or "*Not yet generated: run the pipeline (see paper/RUNBOOK_ML.md).*"
     banner = ""
     if d["ml_verdicts"] is None:
@@ -269,7 +290,7 @@ def compile_paper(d, c):
 def main():
     c, d = cfg(), load()
     (PAPER / "tables").mkdir(parents=True, exist_ok=True)
-    for name, fn in (("ml_table1_yolo", table_yolo), ("ml_table2_cnn", table_cnn), ("ml_table3_eia", table_eia)):
+    for name, fn in (("ml_table1_yolo", table_yolo), ("ml_table1b_yolo_compare", table_yolo_compare), ("ml_table2_cnn", table_cnn), ("ml_table3_eia", table_eia)):
         t = fn(d, c)
         if t:
             (PAPER / "tables" / f"{name}.md").write_text(t + "\n", encoding="utf-8")

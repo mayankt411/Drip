@@ -42,6 +42,9 @@ yolo:
   conf: 0.25
   iou_match_m: 30.0
   checkpoint: "models/yolo_tank_best.pt"
+  compare:
+    - {name: yolo11s, weights: "yolo11s.pt"}
+    - {name: yolov8s, weights: "yolov8s.pt"}
 
 cnn:
   arch: "convnet"

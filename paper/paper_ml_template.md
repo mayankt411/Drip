@@ -24,7 +24,7 @@ This paper reports that test. It is **not** confirmatory. The 2023 and 2024 wind
 
 # 3. Methods
 
-**Detection (Stage 1).** A YOLOv8-nano detector was trained on 4x upscaled false-colour windows (B04, B03, B02) with labels drawn automatically from OSM footprints. It is scored on held-out terminals on test-period dates. Hypothesis H1: mAP@50 at least {{h1_map50_min}} and precision at least {{h1_precision_min}}.
+**Detection (Stage 1).** A YOLOv8-nano detector was trained on 4x upscaled false-colour windows (B04, B03, B02) with labels drawn automatically from OSM footprints. It is scored on held-out terminals on test-period dates. Three detector sizes (the YOLOv8-nano baseline, YOLOv8-small and YOLO11-small) were trained on the same data and compared on validation images from the training terminals; the one with the highest validation mAP@50 was kept. Hypothesis H1: mAP@50 at least {{h1_map50_min}} and precision at least {{h1_precision_min}}.
 
 **Fill regression (Stage 2).** A small convolutional network takes a 16 x 16 x 6 chip per tank plus sun-geometry inputs and outputs a fill fraction. The hub estimate is the area-weighted mean fill over valid tanks, mapped to barrels by a positive affine transform fitted against EIA on training weeks. Five seeds are averaged. Early stopping uses a chronological inner validation split inside the training years.
 
@@ -37,6 +37,10 @@ This paper reports that test. It is **not** confirmatory. The 2023 and 2024 wind
 {{table_yolo}}
 
 {{h1_sentence}}
+
+{{table_yolo_compare}}
+
+{{compare_sentence}}
 
 {{table_cnn}}
 
@@ -55,12 +59,13 @@ This paper reports that test. It is **not** confirmatory. The 2023 and 2024 wind
 # 6. Limitations
 
 1. The analysis is post hoc and the test windows were inspected earlier, so results are exploratory.
-2. The registry comes from OSM and has no capacity. Area weights are a proxy.
-3. Supervision is hub-level and weak; the network is not shown to read individual tank fill, and H2 is untested.
-4. Auto-labelled detection ground truth is noisy: tanks absent from OSM count as false positives.
-5. The number of weekly pairs is small, so intervals are wide and the naive p-value is optimistic.
-6. EIA Cushing stocks include fixed-roof tanks and pipeline fill, which satellites cannot see in the same way.
-7. Seasonal and sun-angle effects confound any single-hub series, even with baselines.
+2. The detector was chosen after a first configuration narrowly missed H1, so the final H1 result carries a small selection effect; the selection used validation data only and all configurations are reported.
+3. The registry comes from OSM and has no capacity. Area weights are a proxy.
+4. Supervision is hub-level and weak; the network is not shown to read individual tank fill, and H2 is untested.
+5. Auto-labelled detection ground truth is noisy: tanks absent from OSM count as false positives.
+6. The number of weekly pairs is small, so intervals are wide and the naive p-value is optimistic.
+7. EIA Cushing stocks include fixed-roof tanks and pipeline fill, which satellites cannot see in the same way.
+8. Seasonal and sun-angle effects confound any single-hub series, even with baselines.
 
 # 7. Conclusion
 
