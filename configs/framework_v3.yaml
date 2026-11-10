@@ -1,0 +1,43 @@
+# Framework Configuration: Automated Hub Asset Mapping & Operational Activity Classification
+version: "3.0.0"
+study_title: "Automated Asset Census, Structural Classification, and Macro Capacity Utilization of Crude Oil Storage at Cushing, Oklahoma Using Sentinel-2 and Deep Learning"
+
+aoi:
+  hub_name: "Cushing, Oklahoma"
+  bbox: [-96.85, 35.91, -96.69, 36.05]
+  crs: "EPSG:4326"
+  utm_epsg: 32614
+  primary_tiles: ["T14SQE", "T14SPE"]
+
+hypotheses:
+  h1_detection:
+    description: "YOLOv8 accurately enumerates and maps the Cushing commercial storage footprint against verified GIS labels"
+    target_map50: 0.90
+    target_precision: 0.85
+    architecture: "yolov8s"
+    input_size: 640
+  
+  h2_classification:
+    description: "Multi-spectral CNN classifies tank structural type (floating-roof vs fixed-dome) and operational activity status (active vs mothballed/idle)"
+    target_accuracy: 0.85
+    target_f1: 0.80
+    classes:
+      structural: ["FLOATING_ROOF", "FIXED_DOME"]
+      operational: ["ACTIVE_CYCLING", "STATIC_IDLE"]
+    bands: ["B02", "B03", "B04", "B08", "B11", "B12"]
+    chip_size_px: 16
+
+  h3_macro_utilization:
+    description: "Hub-aggregated multi-spectral activity index tracks seasonal macro stock cycles published by EIA"
+    target_pearson_r: 0.65
+    target_p_value: 0.001
+    smoothing_window_weeks: 4
+    eia_series: "W_EPC0_SAX_YCUOK_MBBL"
+
+splits:
+  temporal:
+    development_years: ["2021", "2022"]
+    evaluation_years: ["2023", "2024"]
+  spatial:
+    train_terminals: ["Plains_North", "Enbridge_Main", "Enterprise_Terminal"]
+    held_out_test_terminals: ["Magellan_Midstream", "BP_Cushing", "Energy_Transfer"]
