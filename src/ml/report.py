@@ -235,7 +235,15 @@ def sentences(d):
     if m is not None and m.selected.any():
         r = m[m.selected].iloc[0]
         s["compare_sentence"] = (f"{len(m)} detector configurations were compared on validation mAP@50 and {r.model} was selected "
-                                 f"(validation {r.val_map50:.3f}); on the held-out terminals it reached mAP@50 {r.test_map50:.3f}.")
+                                 f"(validation {r.val_map50:.4f}); on the held-out terminals it reached mAP@50 {r.test_map50:.3f}.")
+        spread = m.val_map50.max() - m.val_map50.min()
+        base = m.iloc[0]
+        if spread < 0.005:
+            s["compare_sentence"] += (f" Validation mAP@50 was saturated (all models within {spread:.4f}), so it could not separate them; "
+                                      "the choice is therefore close to arbitrary. On the held-out terminals "
+                                      + ("every larger model scored higher than the baseline "
+                                         if (m.iloc[1:].test_map50 > base.test_map50).all() else "the larger models did not all beat the baseline ")
+                                      + f"(baseline {base.test_map50:.3f}).")
     s["discussion"] = discussion(d, v)
     return s
 
