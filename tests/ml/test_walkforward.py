@@ -78,3 +78,23 @@ def test_prospective_window_is_locked_until_may_2027(tmp_path, monkeypatch):
     make_world(tmp_path, monkeypatch, signal=True)
     with pytest.raises(SystemExit):
         wf.main("prospective", today=date(2027, 4, 30))
+
+
+def test_float_mode_drops_fixed_and_unsure_tanks(tmp_path, monkeypatch):
+    make_world(tmp_path, monkeypatch, signal=True, last="2026-06-26")
+    t = pd.read_csv(tmp_path / "tanks.csv")
+    t["roof_shape"] = ["floating_roof"] * 12 + ["dome"] * 12 + [np.nan] * 6
+    t.to_csv(tmp_path / "tanks.csv", index=False)
+    allw = wf.setup(ev.cfg(), ev.rc())["w"]
+    fw = wf.setup(ev.cfg(), ev.rc(), only_floating=True)["w"]
+    assert (fw[:12] == allw[:12]).all() and (fw[12:] == 0).all()
+    wf.main("run_float")
+    v = json.loads((tmp_path / "results" / "h3_radar_wf_float_verdict.json").read_text())
+    assert v["variant"] == "floating_roof_tanks_only" and v["v4_verdict_unchanged"] == "FAIL"
+    assert not (tmp_path / "results" / "h3_radar_wf_verdict.json").exists()
+
+
+def test_float_prospective_is_still_locked(tmp_path, monkeypatch):
+    make_world(tmp_path, monkeypatch, signal=True)
+    with pytest.raises(SystemExit):
+        wf.main("prospective_float", today=date(2027, 4, 30))

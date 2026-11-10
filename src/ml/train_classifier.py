@@ -10,6 +10,7 @@ from torch import nn
 
 from .common import ROOT, cfg, seed_all
 from .framework import fw, load_inputs, tank_baseline
+from .h2_common import scores, size_rule
 from .hub import fit_ridge
 
 RES = ROOT / "results"
@@ -21,7 +22,7 @@ def structural_labels(reg, h2):
     fl = set(h2.get("float_tags", FLOAT))
     fx = set(h2.get("fixed_tags", FIXED))
     tag = reg.roof_shape.astype("string").str.lower().str.strip()
-    y = np.full(len(reg), -1)
+    y = np.full(len(reg), -1, dtype=np.int64)
     y[tag.isin(fx).to_numpy()] = 0
     y[tag.isin(fl).to_numpy()] = 1
     return y
@@ -49,7 +50,7 @@ def fit_cnn(xtr, ytr, xva, yva, seed, epochs=300, patience=40):
     seed_all(seed)
     m = Tiny()
     mu, sd = xtr.mean((0, 2, 3), keepdims=True), xtr.std((0, 2, 3), keepdims=True) + 1e-4
-    nz = lambda a: torch.tensor((a - mu) / sd)
+    nz = lambda a: torch.tensor(((a - mu) / sd).astype(np.float32))
     xt, xv = nz(xtr), nz(xva)
     wts = torch.tensor(len(ytr) / (2 * np.maximum(np.bincount(ytr, minlength=2), 1)), dtype=torch.float32)
     lossf = nn.CrossEntropyLoss(weight=wts)
@@ -75,28 +76,18 @@ def fit_cnn(xtr, ytr, xva, yva, seed, epochs=300, patience=40):
     return m, (mu, sd)
 
 
-def scores(y, p):
-    acc = float((y == p).mean())
-    f1s, rec = [], []
-    for k in (0, 1):
-        tp = ((p == k) & (y == k)).sum()
-        pr = tp / max((p == k).sum(), 1)
-        rc = tp / max((y == k).sum(), 1)
-        f1s.append(0.0 if pr + rc == 0 else 2 * pr * rc / (pr + rc))
-        rec.append(rc)
-    cm = np.array([[((y == a) & (p == b)).sum() for b in (0, 1)] for a in (0, 1)])
-    return {"accuracy": acc, "balanced_accuracy": float(np.mean(rec)), "macro_f1": float(np.mean(f1s)),
-            "cm_fixed_fixed": int(cm[0, 0]), "cm_fixed_float": int(cm[0, 1]),
-            "cm_float_fixed": int(cm[1, 0]), "cm_float_float": int(cm[1, 1])}
-
-
-def main():
+def main(band=None):
+    """band: only tanks up to this diameter in metres (the size-controlled test, docs/preregistration_v4_2.md)."""
+    suf = "" if band is None else f"_band{int(band)}"
     c, f = cfg(), fw()
     h2 = f["hypotheses"]["h2_classification"]
     bank, reg, ok, dt = load_inputs(c)
     y = structural_labels(reg, h2)
     col = "split_h2" if "split_h2" in reg.columns else "split"  # spatial-block split when docs/h2_resplit.md was applied
     tr, te = (y >= 0) & (reg[col] == "train").to_numpy(), (y >= 0) & (reg[col] == "heldout").to_numpy()
+    if band is not None and "diameter_m" in reg.columns:
+        small = (reg.diameter_m <= band).to_numpy()
+        tr, te = tr & small, te & small
     n = {"labelled": int((y >= 0).sum()), "train": [int((y[tr] == k).sum()) for k in (0, 1)],
          "heldout": [int((y[te] == k).sum()) for k in (0, 1)], "roof_tag_counts": reg.roof_shape.value_counts(dropna=False).to_dict()}
     RES.mkdir(exist_ok=True)
@@ -124,29 +115,36 @@ def main():
         for seed in c["cnn"]["seeds"]:
             m, (mu_c, sd_c) = fit_cnn(xtr_all[fit_i], y[fit_i], xtr_all[val_i], y[val_i], seed)
             with torch.no_grad():
-                prob += torch.softmax(m(torch.tensor((xte[te_i] - mu_c) / sd_c)), 1).numpy()
+                prob += torch.softmax(m(torch.tensor(((xte[te_i] - mu_c) / sd_c).astype(np.float32))), 1).numpy()
         pc = prob.argmax(1)
         feat = lambda ch: ch.mean((2, 3))
         a = feat(xtr_all)
         rg, _ = fit_ridge(a[fit_i], 2.0 * y[fit_i] - 1, [0.1, 1.0, 10.0], a[val_i], 2.0 * y[val_i] - 1)
         pr = (rg(feat(xte)[te_i]) > 0).astype(int)
         maj = np.full(len(te_i), np.bincount(y[fit_i]).argmax())
-        for name, p in (("cnn", pc), ("ridge_band_means", pr), ("majority", maj)):
+        runs = [("cnn", pc), ("ridge_band_means", pr), ("majority", maj)]
+        if "diameter_m" in reg.columns:  # size-only baseline, added after the first H2 run showed the size confound
+            d = reg.diameter_m.to_numpy()
+            runs.append(("diameter_rule", size_rule(d[idx], y[idx], d[te_i])))
+        for name, p in runs:
             rows.append({"task": "structural_floating_vs_fixed", "model": name, "split": "heldout_spatial_blocks_2023_2024" if col == "split_h2" else "heldout_terminals_2023_2024",
                          "status": "SCORED", "n_test": len(te_i), **scores(y[te_i], p)})
-    pd.DataFrame(rows).to_csv(RES / "h2_classification_metrics.csv", index=False)
+    pd.DataFrame(rows).to_csv(RES / f"h2_classification_metrics{suf}.csv", index=False)
     sc = {r["model"]: r for r in rows if r.get("status") == "SCORED"}
     if "cnn" in sc:  # targets from the framework; the CNN must also beat the majority guess on macro F1
         t = h2.get("target_accuracy", 0.85), h2.get("target_f1", 0.80)
         v = {"split": col, "accuracy_ok": bool(sc["cnn"]["accuracy"] >= t[0]), "f1_ok": bool(sc["cnn"]["macro_f1"] >= t[1]),
              "beats_majority": bool(sc["cnn"]["macro_f1"] > sc["majority"]["macro_f1"]),
              "beats_ridge": bool(sc["cnn"]["macro_f1"] > sc["ridge_band_means"]["macro_f1"])}
-        v["status"] = "PASS" if v["accuracy_ok"] and v["f1_ok"] and v["beats_majority"] else "FAIL"
-        (RES / "h2_verdict.json").write_text(json.dumps(v, indent=2), encoding="utf-8")
-    (RES / "h2_label_counts.json").write_text(json.dumps(n, indent=2, default=str), encoding="utf-8")
+        if "diameter_rule" in sc:
+            v["beats_size_rule"] = bool(sc["cnn"]["macro_f1"] > sc["diameter_rule"]["macro_f1"])
+        v["status"] = "PASS" if v["accuracy_ok"] and v["f1_ok"] and v["beats_majority"] and (band is None or v.get("beats_size_rule", True)) else "FAIL"
+        (RES / f"h2_verdict{suf}.json").write_text(json.dumps(v, indent=2), encoding="utf-8")
+    (RES / f"h2_label_counts{suf}.json").write_text(json.dumps(n, indent=2, default=str), encoding="utf-8")
     print(json.dumps(n, indent=2, default=str))
     print(pd.DataFrame(rows)[["task", "model", "status"]].to_string(index=False))
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(float(sys.argv[1]) if len(sys.argv) > 1 else None)

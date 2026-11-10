@@ -17,10 +17,11 @@ GAP = (5, 14)
 SHIFTS = [k for k in range(-52, 53) if abs(k) >= 13]
 PROSPECTIVE = ("2026-11-01", "2027-04-30", date(2027, 5, 1))
 PRIMARY = ["2020", "2021", "2022"]
+VARIANT = {False: "all_tanks", True: "floating_roof_tanks_only"}
 VARIANTS = ["radar_large_tanks", "radar_plus_season"]  # reported, never used for the verdict
 
 
-def setup(c, r):
+def setup(c, r, only_floating=False):
     tanks = pd.read_csv(ev.REGISTRY)
     eia = ev.load_eia_all(c)
     meta, F = ev.load_passes()
@@ -29,6 +30,8 @@ def setup(c, r):
     if cov.exists():
         start = max(start, json.loads(cov.read_text(encoding="utf-8"))["effective_start"])
     w = tanks.area_weight_m2.to_numpy()
+    if only_floating:  # v4.2: keep only tanks read as open floating roofs; fixed roofs and unsure tanks get zero weight
+        w = np.where((tanks.roof_shape == "floating_roof").to_numpy(), w, 0.0)
     big = np.where(tanks.diameter_m.to_numpy() >= r["large_tank_min_m"], w, 0.0)
     return dict(meta=meta, F=F, w=w, big=big, eia=eia, r=r, start=start)
 
@@ -194,17 +197,20 @@ def save(tag, M, parts, verdict):
 
 
 def main(mode="run", today=None):
+    """mode: run, prospective, or either with _float for the floating-roof-only variant (docs/preregistration_v4_2.md)."""
     c, r = ev.cfg(), ev.rc()
     st, seed = c["stats"], c["seed"]
+    float_only, mode = mode.endswith("_float"), mode.removesuffix("_float")
+    sfx = "_float" if float_only else ""
     if mode == "prospective" and (today or date.today()) < PROSPECTIVE[2]:
         raise SystemExit(f"The prospective window is scored once, no earlier than {PROSPECTIVE[2]}.")
-    ctx = setup(c, r)
+    ctx = setup(c, r, float_only)
     eia, last = ctx["eia"], ctx["eia"].week_end.max()
     if mode == "prospective":
         parts = [fold("prospective", ctx, r["train_end"], PROSPECTIVE[0], PROSPECTIVE[1])]
         M = pd.DataFrame(scope_rows("prospective", parts, eia, st, seed, True))
         c1 = criteria(M, r["h3"])
-        save("h3_radar_wf_prospective", M, parts, {"status": "PASS" if all(c1.values()) else "FAIL", **c1, "claim": claim(c1)})
+        save("h3_radar_wf_prospective" + sfx, M, parts, {"status": "PASS" if all(c1.values()) else "FAIL", **c1, "claim": claim(c1), "variant": VARIANT[float_only]})
         return
     folds = [fold(str(y), ctx, f"{y - 1}-12-31", f"{y}-01-01", min(pd.Timestamp(f"{y}-12-31"), last))
              for y in range(2020, 2027) if pd.Timestamp(f"{y}-01-01") <= last]
@@ -219,9 +225,9 @@ def main(mode="run", today=None):
     status = "NOT_TESTABLE" if prim is None else "PASS" if all(prim.values()) else "PARTIAL" if pool and all(pool.values()) else "FAIL"
     verdict = {"status": status, "primary": prim, "pooled_2020_2026": pool, "claim": claim(prim) if prim else None,
                "folds": {p["name"]: {k: p[k] for k in ["scored", "n_train", "n_test", "alpha"] if k in p} for p in folds + wins},
-               "v4_verdict_unchanged": "FAIL",
+               "v4_verdict_unchanged": "FAIL", "variant": VARIANT[float_only],
                "note": "level and baseline rules use weekly units as in v4; difference rules use gap-tolerant pairs (rule B); variants are not used for the verdict"}
-    save("h3_radar_wf", M, folds + wins, verdict)
+    save("h3_radar_wf" + sfx, M, folds + wins, verdict)
 
 
 if __name__ == "__main__":
