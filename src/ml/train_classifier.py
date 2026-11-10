@@ -95,7 +95,8 @@ def main():
     h2 = f["hypotheses"]["h2_classification"]
     bank, reg, ok, dt = load_inputs(c)
     y = structural_labels(reg, h2)
-    tr, te = (y >= 0) & (reg.split == "train").to_numpy(), (y >= 0) & (reg.split == "heldout").to_numpy()
+    col = "split_h2" if "split_h2" in reg.columns else "split"  # spatial-block split when docs/h2_resplit.md was applied
+    tr, te = (y >= 0) & (reg[col] == "train").to_numpy(), (y >= 0) & (reg[col] == "heldout").to_numpy()
     n = {"labelled": int((y >= 0).sum()), "train": [int((y[tr] == k).sum()) for k in (0, 1)],
          "heldout": [int((y[te] == k).sum()) for k in (0, 1)], "roof_tag_counts": reg.roof_shape.value_counts(dropna=False).to_dict()}
     RES.mkdir(exist_ok=True)
@@ -131,9 +132,17 @@ def main():
         pr = (rg(feat(xte)[te_i]) > 0).astype(int)
         maj = np.full(len(te_i), np.bincount(y[fit_i]).argmax())
         for name, p in (("cnn", pc), ("ridge_band_means", pr), ("majority", maj)):
-            rows.append({"task": "structural_floating_vs_fixed", "model": name, "split": "heldout_terminals_2023_2024",
+            rows.append({"task": "structural_floating_vs_fixed", "model": name, "split": "heldout_spatial_blocks_2023_2024" if col == "split_h2" else "heldout_terminals_2023_2024",
                          "status": "SCORED", "n_test": len(te_i), **scores(y[te_i], p)})
     pd.DataFrame(rows).to_csv(RES / "h2_classification_metrics.csv", index=False)
+    sc = {r["model"]: r for r in rows if r.get("status") == "SCORED"}
+    if "cnn" in sc:  # targets from the framework; the CNN must also beat the majority guess on macro F1
+        t = h2.get("target_accuracy", 0.85), h2.get("target_f1", 0.80)
+        v = {"split": col, "accuracy_ok": bool(sc["cnn"]["accuracy"] >= t[0]), "f1_ok": bool(sc["cnn"]["macro_f1"] >= t[1]),
+             "beats_majority": bool(sc["cnn"]["macro_f1"] > sc["majority"]["macro_f1"]),
+             "beats_ridge": bool(sc["cnn"]["macro_f1"] > sc["ridge_band_means"]["macro_f1"])}
+        v["status"] = "PASS" if v["accuracy_ok"] and v["f1_ok"] and v["beats_majority"] else "FAIL"
+        (RES / "h2_verdict.json").write_text(json.dumps(v, indent=2), encoding="utf-8")
     (RES / "h2_label_counts.json").write_text(json.dumps(n, indent=2, default=str), encoding="utf-8")
     print(json.dumps(n, indent=2, default=str))
     print(pd.DataFrame(rows)[["task", "model", "status"]].to_string(index=False))
